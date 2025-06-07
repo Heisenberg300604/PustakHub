@@ -1,46 +1,46 @@
-import React, { useEffect } from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
-// import { useNavigation } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
+import React, { useEffect } from "react";
+import { View, Text, Image, StyleSheet } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { useFonts } from "expo-font";
 
 const SplashScreen = () => {
 
-    const [fontsLoaded] = useFonts({
-    'JockeyOne': require('../assets/fonts/JockeyOne-Regular.ttf'),
+  const navigation = useNavigation();
+
+  const [fontsLoaded] = useFonts({
+    JockeyOne: require("../assets/fonts/JockeyOne-Regular.ttf"),
   });
-  
+
+
+  useEffect(() => {
+    // Simulate splash screen delay of 2.5 seconds
+    const timer = setTimeout(() => {
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "Auth" }],
+      });
+    }, 2500);
+
+    return () => clearTimeout(timer);
+  }, [navigation]);
+
   if (!fontsLoaded) {
-  return null;
-}
-//   const navigation = useNavigation();
-  
-//   useEffect(() => {
-//     // Simulate splash screen delay of 2.5 seconds
-//     const timer = setTimeout(() => {
-//       navigation.reset({
-//         index: 0,
-//         routes: [{ name: 'Auth' }],
-//       });
-//     }, 2500);
-    
-//     return () => clearTimeout(timer);
-//   }, [navigation]);
-  
+    return null;
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.logoContainer}>
         <Image
-          source={require('../assets/logo.png')}
+          source={require("../assets/logo.png")}
           style={styles.logo}
           resizeMode="contain"
         />
         <Text style={styles.title}>PustakHub</Text>
       </View>
-      
+
       <View style={styles.taglineContainer}>
-        <Text style={styles.taglineBlue}>Exchange</Text>
-        <Text style={styles.taglineRed}>Knowledge,</Text>
-        <Text style={styles.taglineBlack}>Not Just Books</Text>
+        <Text style={styles.taglineBlack}>Affordable Learning Starts Here</Text>
       </View>
     </View>
   );
@@ -49,12 +49,12 @@ const SplashScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F9FAFB',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#F9FAFB",
+    alignItems: "center",
+    justifyContent: "center",
   },
   logoContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 30,
   },
   logo: {
@@ -64,31 +64,21 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 42,
-    fontWeight: 'bold',
-    color: '#E49B0F', // Gold/orange color similar to the original
+    fontWeight: "bold",
+    color: "#E49B0F", // Gold/orange color similar to the original
     // Note: You would use the actual font here once imported properly
-    fontFamily: 'JockeyOne',
+    fontFamily: "JockeyOne",
   },
   taglineContainer: {
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginTop: 10,
   },
-  taglineBlue: {
-    fontSize: 22,
-    fontWeight: '600',
-    color: '#0F86E4', // Blue color matching the top book
-    marginBottom: 4,
-  },
-  taglineRed: {
-    fontSize: 22,
-    fontWeight: '600',
-    color: '#E4340F', // Red color matching the middle book
-    marginBottom: 4,
-  },
   taglineBlack: {
-    fontSize: 22,
-    fontWeight: '600',
-    color: '#333333',
+    fontSize: 25,
+    fontWeight: "600",
+    color: "#333333",
+    fontFamily: "JockeyOne",
   },
 });
 
