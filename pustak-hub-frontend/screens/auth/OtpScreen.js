@@ -104,7 +104,7 @@ const OtpScreen = () => {
   };
 
 //   const formattedPhone = phoneNumber ? `+91 ${phoneNumber}` : '';
-    const formattedPhone = '+91 1234567890'; // Replace with actual phone number from context
+    const formattedPhone = '+91 8851558046'; // Replace with actual phone number from context
 
   return (
     <KeyboardAvoidingView
