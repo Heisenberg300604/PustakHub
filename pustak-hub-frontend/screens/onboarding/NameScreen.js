@@ -60,11 +60,7 @@ export default function NameScreen() {
           </LinearGradient>
         </TouchableOpacity>
       </View>
-      
-      {/* Bottom Indicator */}
-      <View style={styles.bottomContainer}>
-        <Text style={styles.indicator}>Onboarding 1</Text>
-      </View>
+    
     </SafeAreaView>
   );
 }

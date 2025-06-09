@@ -11,7 +11,8 @@ export default function OnboardingNavigator() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Name" component={NameScreen} />
-      {/* <Stack.Screen name="Location" component={LocationScreen} />
+      <Stack.Screen name="Location" component={LocationScreen} />
+      {/* 
       <Stack.Screen name="Contact" component={ContactScreen} />
       <Stack.Screen name="Finish" component={FinishScreen} /> */}
     </Stack.Navigator>
