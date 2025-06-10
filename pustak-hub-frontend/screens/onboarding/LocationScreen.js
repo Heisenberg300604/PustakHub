@@ -13,10 +13,12 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as Location from 'expo-location';
+import { useNavigation } from '@react-navigation/native';
 
 export default function LocationScreen() {
   const [city, setCity] = useState('');
   const [isLoadingLocation, setIsLoadingLocation] = useState(false);
+  const navigation = useNavigation();
 
   const handleNext = () => {
     if (city.trim() === '') {
@@ -25,6 +27,7 @@ export default function LocationScreen() {
     }
     console.log('City entered:', city);
     // Handle navigation to next screen
+    navigation.navigate('Contact');
   };
 
   const getCurrentLocation = async () => {
