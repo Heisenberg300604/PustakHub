@@ -7,151 +7,79 @@ import {
   SafeAreaView,
   StatusBar,
   Animated,
-  Dimensions,
+  Image,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 
-const { width, height } = Dimensions.get('window');
-
 export default function FinishScreen() {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.8)).current;
-  const slideAnim = useRef(new Animated.Value(50)).current;
-  const checkmarkScale = useRef(new Animated.Value(0)).current;
-  const sparkleAnim = useRef(new Animated.Value(0)).current;
   const navigation = useNavigation();
 
   useEffect(() => {
-    // Sequence of animations
-    Animated.sequence([
-      // First: Fade in and scale up the main content
-      Animated.parallel([
-        Animated.timing(fadeAnim, {
-          toValue: 1,
-          duration: 800,
-          useNativeDriver: true,
-        }),
-        Animated.timing(scaleAnim, {
-          toValue: 1,
-          duration: 800,
-          useNativeDriver: true,
-        }),
-        Animated.timing(slideAnim, {
-          toValue: 0,
-          duration: 800,
-          useNativeDriver: true,
-        }),
-      ]),
-      // Then: Animate the checkmark
-      Animated.spring(checkmarkScale, {
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
         toValue: 1,
-        tension: 100,
-        friction: 6,
+        duration: 800,
         useNativeDriver: true,
       }),
-      // Finally: Sparkle animation
-      Animated.loop(
-        Animated.sequence([
-          Animated.timing(sparkleAnim, {
-            toValue: 1,
-            duration: 1500,
-            useNativeDriver: true,
-          }),
-          Animated.timing(sparkleAnim, {
-            toValue: 0,
-            duration: 1500,
-            useNativeDriver: true,
-          }),
-        ])
-      ),
+      Animated.timing(scaleAnim, {
+        toValue: 1,
+        duration: 800,
+        useNativeDriver: true,
+      }),
     ]).start();
   }, []);
 
   const handleGetStarted = () => {
-    console.log('Navigating to Dashboard...');
-    // navigation.navigate('Dashboard');
-    // For demo purposes, you can replace this with your actual navigation
     navigation.reset({
       index: 0,
       routes: [{ name: 'Main' }],
     });
   };
 
-  const sparkleOpacity = sparkleAnim.interpolate({
-    inputRange: [0, 0.5, 1],
-    outputRange: [0.3, 1, 0.3],
-  });
-
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#F8F9FA" />
-      
-      {/* Background Sparkles */}
-      <Animated.View style={[styles.sparkle, styles.sparkle1, { opacity: sparkleOpacity }]}>
-        <Text style={styles.sparkleText}>✨</Text>
-      </Animated.View>
-      <Animated.View style={[styles.sparkle, styles.sparkle2, { opacity: sparkleOpacity }]}>
-        <Text style={styles.sparkleText}>⭐</Text>
-      </Animated.View>
-      <Animated.View style={[styles.sparkle, styles.sparkle3, { opacity: sparkleOpacity }]}>
-        <Text style={styles.sparkleText}>✨</Text>
-      </Animated.View>
-      <Animated.View style={[styles.sparkle, styles.sparkle4, { opacity: sparkleOpacity }]}>
-        <Text style={styles.sparkleText}>🌟</Text>
-      </Animated.View>
+      <StatusBar barStyle="dark-content" backgroundColor="#FAFAFA" />
       
       <Animated.View 
         style={[
           styles.content,
           {
             opacity: fadeAnim,
-            transform: [
-              { scale: scaleAnim },
-              { translateY: slideAnim }
-            ]
+            transform: [{ scale: scaleAnim }]
           }
         ]}
       >
-        {/* Success Icon */}
-        <Animated.View 
-          style={[
-            styles.iconContainer,
-            { transform: [{ scale: checkmarkScale }] }
-          ]}
-        >
-          <LinearGradient
-            colors={['#FFB84D', '#FF9500']}
-            style={styles.iconGradient}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-          >
-            <Text style={styles.checkmark}>✓</Text>
-          </LinearGradient>
-        </Animated.View>
+        {/* Main Title */}
+        <Text style={styles.title}>You're All Set!</Text>
         
-        {/* Main Message */}
-        <Text style={styles.title}>You're All Set! 🎉</Text>
+        {/* Tick Image Container */}
+        <View style={styles.imageContainer}>
+          {/* Replace this View with your Image component */}
+          <View style={styles.imagePlaceholder}>
+          <Image 
+            source={require('../../assets/done.png')} 
+            style={styles.tickImage}
+            resizeMode="contain"
+          />
+          </View>
+          {/* <View style={styles.imagePlaceholder}> */}
+            {/* <Text style={styles.placeholderText}>Your Tick Image Here</Text>
+            <Text style={styles.dimensionsText}>Dimensions: 200x200</Text> */}
+          {/* </View> */}
+        </View>
         
-        {/* Motivational Message */}
-        <Text style={styles.subtitle}>
-          Welcome aboard! Your journey starts now.{'\n'}
-          Let's make something amazing together!
-        </Text>
-        
-        {/* Feature Highlights */}
+        {/* Simple Feature List */}
         <View style={styles.featuresContainer}>
           <View style={styles.featureItem}>
-            <Text style={styles.featureEmoji}>🚀</Text>
-            <Text style={styles.featureText}>Find Books Near You</Text>
+            <View style={styles.bulletPoint} />
+            <Text style={styles.featureText}>Buy & Sell Books</Text>
           </View>
           <View style={styles.featureItem}>
-            <Text style={styles.featureEmoji}>💡</Text>
-            <Text style={styles.featureText}>Sell or Donate</Text> 
-          </View>
-          <View style={styles.featureItem}>
-            <Text style={styles.featureEmoji}>🎯</Text>
-            <Text style={styles.featureText}>Find Like minded People</Text>
+            <View style={styles.bulletPoint} />
+            <Text style={styles.featureText}>Donate Books</Text>
           </View>
         </View>
         
@@ -168,14 +96,8 @@ export default function FinishScreen() {
             end={{ x: 1, y: 0 }}
           >
             <Text style={styles.buttonText}>Let's Get Started</Text>
-            <Text style={styles.buttonIcon}>→</Text>
           </LinearGradient>
         </TouchableOpacity>
-        
-        {/* Bottom Message */}
-        <Text style={styles.bottomText}>
-          Everything is ready for you! 🌟
-        </Text>
       </Animated.View>
     </SafeAreaView>
   );
@@ -184,143 +106,92 @@ export default function FinishScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8F9FA',
+    backgroundColor: '#FAFAFA',
   },
   content: {
     flex: 1,
     paddingHorizontal: 40,
-    paddingTop: 60,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  sparkle: {
-    position: 'absolute',
-    zIndex: 1,
-  },
-  sparkle1: {
-    top: height * 0.15,
-    left: width * 0.1,
-  },
-  sparkle2: {
-    top: height * 0.25,
-    right: width * 0.15,
-  },
-  sparkle3: {
-    top: height * 0.65,
-    left: width * 0.08,
-  },
-  sparkle4: {
-    top: height * 0.75,
-    right: width * 0.1,
-  },
-  sparkleText: {
-    fontSize: 24,
-  },
-  iconContainer: {
-    marginBottom: 40,
-    elevation: 10,
-    shadowColor: '#FFB84D',
-    shadowOffset: {
-      width: 0,
-      height: 8,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 16,
-  },
-  iconGradient: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  checkmark: {
-    fontSize: 50,
-    color: '#fff',
-    fontWeight: 'bold',
   },
   title: {
-    fontSize: 38,
+    fontSize: 40,
     fontWeight: 'bold',
-    color: '#FFB84D',
+    color: '#FF9500',
     textAlign: 'center',
-    marginBottom: 20,
-    fontFamily: 'Inter-Bold',
+    marginBottom: 30,
   },
-  subtitle: {
-    fontSize: 18,
-    color: '#666',
+  imageContainer: {
+    marginBottom: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  // Use this for your actual image
+  tickImage: {
+    width: 130,
+    height: 130,
+  },
+  // Remove this placeholder once you add your image
+  imagePlaceholder: {
+    width: 200,
+    height: 200,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  placeholderText: {
+    fontSize: 16,
+    color: '#999',
     textAlign: 'center',
-    marginBottom: 40,
-    lineHeight: 26,
-    paddingHorizontal: 10,
+    marginBottom: 5,
+  },
+  dimensionsText: {
+    fontSize: 12,
+    color: '#BBB',
+    textAlign: 'center',
   },
   featuresContainer: {
-    width: '100%',
-    marginBottom: 50,
+    alignItems: 'flex-start',
+    marginBottom: 60,
   },
   featureItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    marginBottom: 8,
-    backgroundColor: '#fff',
-    borderRadius: 15,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    marginBottom: 20,
   },
-  featureEmoji: {
-    fontSize: 24,
+  bulletPoint: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#FFB84D',
     marginRight: 15,
   },
   featureText: {
-    fontSize: 16,
-    color: '#333',
+    fontSize: 18,
+    color: '#555',
     fontWeight: '500',
   },
   buttonContainer: {
     width: '100%',
-    borderRadius: 30,
+    borderRadius: 25,
     overflow: 'hidden',
-    marginBottom: 30,
-    elevation: 8,
+    elevation: 4,
     shadowColor: '#FF9500',
     shadowOffset: {
       width: 0,
-      height: 6,
+      height: 4,
     },
-    shadowOpacity: 0.3,
-    shadowRadius: 12,
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
   },
   button: {
     paddingVertical: 18,
     paddingHorizontal: 30,
     alignItems: 'center',
     justifyContent: 'center',
-    flexDirection: 'row',
   },
   buttonText: {
     color: '#fff',
-    fontSize: 20,
-    fontWeight: '700',
-    marginRight: 10,
-  },
-  buttonIcon: {
-    color: '#fff',
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  bottomText: {
-    fontSize: 16,
-    color: '#888',
-    textAlign: 'center',
-    fontStyle: 'italic',
+    fontSize: 18,
+    fontWeight: '600',
   },
 });

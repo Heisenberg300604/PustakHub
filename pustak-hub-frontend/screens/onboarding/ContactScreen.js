@@ -86,10 +86,12 @@ export default function ContactScreen() {
         
         {/* Illustration */}
         <View style={styles.imageContainer}>
-          <View style={styles.illustrationPlaceholder}>
-            <Text style={styles.illustrationIcon}>📱</Text>
-          </View>
-        </View>
+                  <Image
+                    source={require('../../assets/socials.png')}
+                    style={styles.illustration}
+                    resizeMode="contain"
+                  />
+                </View>
         
         {/* Email Input Field */}
         <View style={styles.inputContainer}>
@@ -241,5 +243,14 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
     fontWeight: '600',
+  },
+  imageContainer: {
+    marginBottom: 40,
+    alignItems: 'center',
+  },
+  illustration: {
+    width: 150,
+    height: 150,
+    borderRadius: 10,
   },
 });
