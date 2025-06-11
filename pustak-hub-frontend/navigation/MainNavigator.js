@@ -8,12 +8,16 @@ const Tab = createBottomTabNavigator();
 const BrowseStack = createStackNavigator();
 // const ChatStack = createStackNavigator(); // will be added later in v2
 const ProfileStack = createStackNavigator();
+import BrowseScreen from '../screens/main/BrowseScreen';
+import SellScreen from '../screens/main/SellScreen';
+import DonateScreen from '../screens/main/DonateScreen';
+import ProfileScreen from '../screens/main/ProfileScreen';
 
 const BrowseStackNavigator = () => {
     return (
       <BrowseStack.Navigator>
         <BrowseStack.Screen 
-          name="BrowseHome" 
+          name="Browse" 
           component={BrowseScreen} 
           options={{ title: 'Browse Books' }}
         />
@@ -72,10 +76,10 @@ const MainNavigator = () => {
         })}
       >
         <Tab.Screen name="Browse" component={BrowseStackNavigator} />
-        {/* <Tab.Screen name="Sell" component={SellScreen} /> */}
-        {/* <Tab.Screen name="Donate" component={DonateScreen} /> */}
+        <Tab.Screen name="Sell" component={SellScreen} />
+        <Tab.Screen name="Donate" component={DonateScreen} />
         {/* <Tab.Screen name="Chat" component={ChatStackNavigator} /> */}
-        {/* <Tab.Screen name="Profile" component={ProfileScreen} /> */}
+        <Tab.Screen name="Profile" component={ProfileScreen} />
       </Tab.Navigator>
     );
   };

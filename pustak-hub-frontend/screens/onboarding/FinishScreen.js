@@ -10,6 +10,7 @@ import {
   Dimensions,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useNavigation } from '@react-navigation/native';
 
 const { width, height } = Dimensions.get('window');
 
@@ -19,6 +20,7 @@ export default function FinishScreen() {
   const slideAnim = useRef(new Animated.Value(50)).current;
   const checkmarkScale = useRef(new Animated.Value(0)).current;
   const sparkleAnim = useRef(new Animated.Value(0)).current;
+  const navigation = useNavigation();
 
   useEffect(() => {
     // Sequence of animations
@@ -72,7 +74,7 @@ export default function FinishScreen() {
     // For demo purposes, you can replace this with your actual navigation
     navigation.reset({
       index: 0,
-      routes: [{ name: 'Dashboard' }],
+      routes: [{ name: 'Main' }],
     });
   };
 

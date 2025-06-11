@@ -18,8 +18,11 @@
     "expo-linear-gradient": "~14.1.4",
     "expo-location": "^18.1.5",
     "expo-status-bar": "~2.2.3",
+    "lucide-react-native": "^0.514.0",
     "react": "19.0.0",
-    "react-native": "0.79.2"
+    "react-native": "0.79.2",
+    "react-native-switch": "^1.5.1",
+    "react-native-tab-view": "^4.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
