@@ -9,10 +9,16 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  Alert
+  Alert,
+  SafeAreaView,
+  StatusBar,
+  Dimensions,
+  Image
 } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
-// import { useAuth } from '../../context/AuthContext';
+
+const { width, height } = Dimensions.get('window');
 
 const OtpScreen = () => {
   const [otp, setOtp] = useState(['', '', '', '']);
@@ -21,7 +27,6 @@ const OtpScreen = () => {
   const [countdown, setCountdown] = useState(30);
   const inputRefs = useRef([]);
   const navigation = useNavigation();
-//   const { phoneNumber, verifyOtp } = useAuth();
   
   // Focus on first input when screen loads
   useEffect(() => {
@@ -103,22 +108,34 @@ const OtpScreen = () => {
     }
   };
 
-//   const formattedPhone = phoneNumber ? `+91 ${phoneNumber}` : '';
-    const formattedPhone = '+91 8851558046'; // Replace with actual phone number from context
+  const formattedPhone = '+91 88515 XXXXX'; // Replace with actual phone number from context
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={styles.container}
-    >
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <View style={styles.content}>
-          <Text style={styles.heading}>Verify your number</Text>
-          <Text style={styles.subheading}>
-            Enter the 4-digit code sent to{'\n'}
-            <Text style={styles.phoneText}>{formattedPhone}</Text>
+    <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : null}
+        style={styles.keyboardAvoidingView}
+      >
+        <View style={styles.contentContainer}>
+          {/* Header Text */}
+          <Text style={styles.headerText}>Enter the Code</Text>
+          
+          {/* Instruction Text */}
+          <Text style={styles.instructionText}>
+            Enter the 4-digit OTP sent to{'\n'}{formattedPhone}
           </Text>
           
+          {/* Illustration Image */}
+          <View style={styles.imageContainer}>
+            <Image
+              source={require('../../assets/otp.png')} // Replace with your actual image path
+              style={styles.illustrationImage}
+              resizeMode="contain"
+            />
+          </View>
+          
+          {/* OTP Input Section */}
           <View style={styles.otpContainer}>
             {[0, 1, 2, 3].map((index) => (
               <TextInput
@@ -135,130 +152,152 @@ const OtpScreen = () => {
             ))}
           </View>
           
-          <TouchableOpacity
-            style={[
-              styles.verifyButton,
-              loading ? styles.verifyButtonDisabled : null
-            ]}
-            onPress={handleVerifyOtp}
-            disabled={loading}
-          >
-            {loading ? (
-              <ActivityIndicator color="#FFFFFF" />
-            ) : (
-              <Text style={styles.verifyButtonText}>Verify</Text>
-            )}
-          </TouchableOpacity>
-          
+          {/* Resend Section */}
           <View style={styles.resendContainer}>
             <Text style={styles.resendText}>Didn't receive the code? </Text>
             {resendDisabled ? (
               <Text style={styles.countdownText}>Resend in {countdown}s</Text>
             ) : (
               <TouchableOpacity onPress={handleResendOtp}>
-                <Text style={styles.resendButtonText}>Resend OTP</Text>
+                <Text style={styles.resendButtonText}>Resend</Text>
               </TouchableOpacity>
             )}
           </View>
+          
+          {/* Submit Button */}
+          <TouchableOpacity
+            style={styles.buttonContainer}
+            activeOpacity={0.85}
+            onPress={handleVerifyOtp}
+            disabled={loading}
+          >
+            <LinearGradient
+              colors={['#FFBB34', '#FFA000']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={styles.gradient}
+            >
+              {loading ? (
+                <ActivityIndicator color="#FFFFFF" />
+              ) : (
+                <Text style={styles.buttonText}>Verify OTP</Text>
+              )}
+            </LinearGradient>
+          </TouchableOpacity>
         </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F9FAFB',
+    backgroundColor: '#FFFFFF',
   },
-  scrollContainer: {
-    flexGrow: 1,
-    justifyContent: 'center',
-    paddingHorizontal: 20,
+  keyboardAvoidingView: {
+    flex: 1,
   },
-  content: {
-    alignItems: 'center',
-    paddingVertical: 40,
+  contentContainer: {
+    flex: 1,
+    paddingHorizontal: 24,
+    paddingTop: height * 0.03,
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
   },
-  heading: {
-    fontSize: 24,
-    fontWeight: '600',
-    marginBottom: 10,
-    color: '#333',
+  headerText: {
+    fontSize: 32,
+    fontWeight: '700',
+    color: '#FFAB00',
+    marginBottom: 16,
+    width: '100%',
+    textAlign: 'left',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto-Bold',
+    letterSpacing: 0.2,
   },
-  subheading: {
+  instructionText: {
     fontSize: 16,
-    textAlign: 'center',
-    marginBottom: 30,
-    color: '#666',
-    lineHeight: 24,
+    color: '#666666',
+    marginBottom: 40,
+    width: '100%',
+    textAlign: 'left',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto-Regular',
+    lineHeight: 22,
   },
-  phoneText: {
-    fontWeight: '600',
-    color: '#333',
+  imageContainer: {
+    width: 120,
+    height: 120,
+    marginBottom: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+  },
+  illustrationImage: {
+    width: '100%',
+    height: '100%',
   },
   otpContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: '80%',
-    marginBottom: 40,
+    width: '100%',
+    marginBottom: 24,
+    paddingHorizontal: 20,
+    alignSelf: 'center',
   },
   otpInput: {
     width: 60,
     height: 60,
-    borderWidth: 1,
-    borderColor: '#E8ECF0',
+    borderWidth: 2,
+    borderColor: '#E0E0E0',
     borderRadius: 8,
     fontSize: 24,
     textAlign: 'center',
     backgroundColor: '#FFFFFF',
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
-  },
-  verifyButton: {
-    backgroundColor: '#E49B0F',
-    paddingVertical: 15,
-    paddingHorizontal: 40,
-    borderRadius: 8,
-    alignItems: 'center',
-    width: '80%',
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  verifyButtonDisabled: {
-    backgroundColor: '#E49B0F80',
-  },
-  verifyButtonText: {
-    color: 'white',
-    fontSize: 16,
     fontWeight: '600',
+    color: '#333333',
   },
   resendContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 30,
+    marginBottom: 32,
+    alignSelf: 'center',
   },
   resendText: {
-    color: '#666',
+    fontSize: 14,
+    color: '#666666',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto-Regular',
   },
   countdownText: {
-    color: '#999',
+    fontSize: 14,
+    color: '#999999',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto-Regular',
   },
   resendButtonText: {
-    color: '#0F86E4',
+    fontSize: 14,
+    color: '#4A90E2',
     fontWeight: '500',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto-Medium',
+    textDecorationLine: 'underline',
+  },
+  buttonContainer: {
+    width: '100%',
+    height: 50,
+    borderRadius: 25,
+    overflow: 'hidden',
+    alignSelf: 'center',
+  },
+  gradient: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 25,
+  },
+  buttonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '700',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto-Bold',
+    letterSpacing: 0.5,
   },
 });
 

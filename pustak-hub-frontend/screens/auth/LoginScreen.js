@@ -11,6 +11,7 @@ import {
   StatusBar,
   Dimensions,
   Alert,
+  Image,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
@@ -21,12 +22,11 @@ const LoginScreen = () => {
   const [mobileNumber, setMobileNumber] = useState('');
   const navigation = useNavigation();
 
-
   const handleSendOTP = () => {
     if (mobileNumber.length !== 10) {
       Alert.alert('Invalid Mobile Number', 'Please enter a valid 10-digit mobile number');
       return;
-    }else{
+    } else {
       navigation.navigate('OTP');
     }
   }
@@ -44,8 +44,17 @@ const LoginScreen = () => {
           
           {/* Instruction Text */}
           <Text style={styles.instructionText}>
-            Enter your mobile number to receive a verification code.
+            Enter your mobile number to{'\n'}receive a verification code.
           </Text>
+          
+          {/* Illustration Image */}
+          <View style={styles.imageContainer}>
+            <Image
+              source={require('../../assets/book.png')} // Replace with your actual image path
+              style={styles.illustrationImage}
+              resizeMode="contain"
+            />
+          </View>
           
           {/* Phone Input Section */}
           <View style={styles.inputRow}>
@@ -56,7 +65,7 @@ const LoginScreen = () => {
               <TextInput
                 style={styles.input}
                 placeholder="Mobile Number"
-                placeholderTextColor="#9E9E9E"
+                placeholderTextColor="#CCCCCC"
                 keyboardType="phone-pad"
                 value={mobileNumber}
                 onChangeText={setMobileNumber}
@@ -97,66 +106,77 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
     paddingHorizontal: 24,
-    paddingTop: height * 0.05, // Position content higher in the screen
+    paddingTop: height * 0.03,
     alignItems: 'flex-start',
+    justifyContent: 'flex-start',
   },
   headerText: {
-    fontSize: 30,
+    fontSize: 32,
     fontWeight: '700',
     color: '#FFAB00',
-    marginBottom: 10,
+    marginBottom: 16,
     width: '100%',
+    textAlign: 'left',
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto-Bold',
     letterSpacing: 0.2,
   },
   instructionText: {
-    fontSize: 15,
-    color: '#555555',
-    marginBottom: 32,
+    fontSize: 16,
+    color: '#666666',
+    marginBottom: 40,
     width: '100%',
+    textAlign: 'left',
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto-Regular',
-    lineHeight: 20,
+    lineHeight: 22,
+  },
+  imageContainer: {
+    width: 120,
+    height: 120,
+    marginBottom: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+  },
+  illustrationImage: {
+    width: '100%',
+    height: '100%',
   },
   inputRow: {
     flexDirection: 'row',
     alignItems: 'center',
     width: '100%',
-    marginBottom: 24,
+    marginBottom: 32,
   },
   countryCodeContainer: {
-    paddingRight: 12,
+    paddingRight: 16,
     justifyContent: 'center',
     alignItems: 'center',
   },
   countryCodeText: {
     fontSize: 16,
-    color: '#212121',
-    fontWeight: '500',
+    color: '#333333',
+    fontWeight: '600',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto-Medium',
   },
   inputContainer: {
     flex: 1,
-    height: 48,
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
+    height: 50,
+    borderWidth: 1.5,
+    borderColor: '#FFAB00',
     borderRadius: 8,
     backgroundColor: '#FFFFFF',
-    elevation: 0,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
   },
   input: {
     flex: 1,
     paddingHorizontal: 16,
     fontSize: 16,
-    color: '#212121',
+    color: '#333333',
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto-Regular',
   },
   buttonContainer: {
     width: '100%',
-    height: 52,
-    borderRadius: 8,
+    height: 50,
+    borderRadius: 25,
     overflow: 'hidden',
     marginTop: 8,
   },
@@ -164,12 +184,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    borderRadius: 25,
   },
   buttonText: {
     color: '#FFFFFF',
     fontSize: 16,
-    fontWeight: '600',
-    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto-Medium',
+    fontWeight: '700',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto-Bold',
     letterSpacing: 0.5,
   },
 });
