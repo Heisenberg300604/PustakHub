@@ -21,6 +21,7 @@
     "lucide-react-native": "^0.514.0",
     "react": "19.0.0",
     "react-native": "0.79.2",
+    "react-native-safe-area-context": "^5.4.1",
     "react-native-switch": "^1.5.1",
     "react-native-tab-view": "^4.1.1"
   },

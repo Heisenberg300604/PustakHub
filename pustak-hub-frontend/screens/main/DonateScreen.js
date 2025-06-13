@@ -3,23 +3,19 @@ import { View, ScrollView, Text, TouchableOpacity, Image, TextInput, StyleSheet 
 import { MapPin, Camera, ChevronLeft } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Switch } from 'react-native-switch';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const DonateScreen = () => {
   const [isDonateForFree, setIsDonateForFree] = useState(true);
 
   return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#f0fdf4' }} edges={['top', 'left', 'right']}>
     <LinearGradient 
       colors={['#f0fdf4', '#ecfdf5']}
       style={styles.container}
     >
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.header}>
-          <TouchableOpacity 
-            // onPress={() => setCurrentScreen('browse')}
-            style={styles.backButton}
-          >
-            <ChevronLeft color="#4b5563" size={24} />
-          </TouchableOpacity>
           <Text style={styles.title}>📖 Donate a Book</Text>
           <Text style={styles.subtitle}>Help a fellow student by donating your books</Text>
         </View>
@@ -99,6 +95,7 @@ const DonateScreen = () => {
         </View>
       </ScrollView>
     </LinearGradient>
+    </SafeAreaView>
   );
 };
 

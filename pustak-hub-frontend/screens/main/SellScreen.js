@@ -2,21 +2,17 @@ import React from 'react';
 import { View, ScrollView, Text, TouchableOpacity, TextInput, StyleSheet } from 'react-native';
 import { MapPin, Camera, ChevronLeft } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-const SellScreen = ({ setCurrentScreen }) => {
+const SellScreen = () => {
   return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff7ed' }} edges={['top', 'left', 'right']}>
     <LinearGradient 
       colors={['#fff7ed', '#f0f9ff']}
       style={styles.container}
     >
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.header}>
-          <TouchableOpacity 
-            onPress={() => setCurrentScreen('browse')}
-            style={styles.backButton}
-          >
-            <ChevronLeft color="#4b5563" size={24} />
-          </TouchableOpacity>
           <Text style={styles.title}>💰 Sell a Book</Text>
           <Text style={styles.subtitle}>Turn your old books into cash</Text>
         </View>
@@ -89,6 +85,7 @@ const SellScreen = ({ setCurrentScreen }) => {
         </View>
       </ScrollView>
     </LinearGradient>
+    </SafeAreaView>
   );
 };
 

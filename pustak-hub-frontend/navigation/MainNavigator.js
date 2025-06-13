@@ -15,11 +15,14 @@ import ProfileScreen from '../screens/main/ProfileScreen';
 
 const BrowseStackNavigator = () => {
     return (
-      <BrowseStack.Navigator>
+      <BrowseStack.Navigator
+      screenOptions={{ 
+        headerShown: false,
+      }}>
         <BrowseStack.Screen 
           name="Browse" 
           component={BrowseScreen} 
-          options={{ title: 'Browse Books' }}
+          // options={{ title: 'Browse Books' }}
         />
         {/* Add detailed book view and other related screens here */}
       </BrowseStack.Navigator>

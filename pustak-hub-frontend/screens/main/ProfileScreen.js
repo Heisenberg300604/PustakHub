@@ -4,34 +4,10 @@ import { ChevronLeft, User } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import { Dimensions } from 'react-native';
+import mockBooks from '../../data/book';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-const ProfileScreen = ({ setCurrentScreen }) => {
-  const mockBooks = [
-    {
-      id: 1,
-      title: "JEE Main Physics Preparation",
-      seller: "Arjun K.",
-      examType: "JEE",
-      price: "₹450",
-      image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=200&h=250&fit=crop"
-    },
-    {
-      id: 2,
-      title: "NEET Biology Complete Guide",
-      seller: "Priya S.",
-      examType: "NEET",
-      price: "Free",
-      image: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=200&h=250&fit=crop"
-    },
-    {
-      id: 3,
-      title: "CAT Quantitative Aptitude",
-      seller: "Rahul M.",
-      examType: "CAT",
-      price: "₹320",
-      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=250&fit=crop"
-    }
-  ];
+const ProfileScreen = () => {
 
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
@@ -43,9 +19,9 @@ const ProfileScreen = ({ setCurrentScreen }) => {
     <View style={styles.tabContent}>
       <View style={styles.listingsHeader}>
         <Text style={styles.listingsTitle}>Your Books (3)</Text>
-        <TouchableOpacity style={styles.addButton}>
+        {/* <TouchableOpacity style={styles.addButton}>
           <Text style={styles.addButtonText}>+ Add New</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
 
       {mockBooks.map((book) => (
@@ -119,30 +95,20 @@ const ProfileScreen = ({ setCurrentScreen }) => {
   });
 
   return (
-    <LinearGradient 
-      colors={['#f0f9ff', '#f3e8ff']}
-      style={styles.container}
-    >
+    <SafeAreaView style ={{ flex: 1 ,backgroundColor: '#f0f9ff'}}>
+    
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <View style={styles.header}>
-          <TouchableOpacity 
-            onPress={() => setCurrentScreen('browse')}
-            style={styles.backButton}
-          >
-            <ChevronLeft color="#4b5563" size={24} />
-          </TouchableOpacity>
-        </View>
 
         {/* Profile Header */}
         <View style={styles.profileHeader}>
           <View style={styles.avatar}>
-            <Text style={styles.avatarText}>AK</Text>
+            <Text style={styles.avatarText}>U</Text>
           </View>
-          <Text style={styles.profileName}>Arjun Kumar</Text>
-          <Text style={styles.profileLocation}>📍 Mumbai, Maharashtra</Text>
-          <View style={styles.verifiedBadge}>
+          <Text style={styles.profileName}>User</Text>
+          <Text style={styles.profileLocation}>📍 Delhi, India</Text>
+          {/* <View style={styles.verifiedBadge}>
             <Text style={styles.verifiedText}>Verified Student</Text>
-          </View>
+          </View> */}
         </View>
 
         <View style={styles.tabContainer}>
@@ -157,14 +123,14 @@ const ProfileScreen = ({ setCurrentScreen }) => {
                 indicatorStyle={styles.tabIndicator}
                 style={styles.tabBar}
                 labelStyle={styles.tabLabel}
-                activeColor="#3b82f6"
+                activeColor="#3b4567"
                 inactiveColor="#6b7280"
               />
             )}
           />
         </View>
       </ScrollView>
-    </LinearGradient>
+    </SafeAreaView>
   );
 };
 
@@ -221,7 +187,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   tabContainer: {
-    height: 400,
+    height:700,
   },
   tabBar: {
     backgroundColor: '#f3f4f6',

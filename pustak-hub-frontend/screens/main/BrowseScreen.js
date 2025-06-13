@@ -1,45 +1,14 @@
 import React from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Image, StyleSheet} from 'react-native';
 import { Search, MapPin, Camera, User, BookOpen, Plus } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import mockBooks from '../../data/book';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const BrowseScreen = () => {
-  const mockBooks = [
-    {
-      id: 1,
-      title: "JEE Main Physics Preparation",
-      seller: "Arjun K.",
-      examType: "JEE",
-      price: "₹450",
-      image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=200&h=250&fit=crop"
-    },
-    {
-      id: 2,
-      title: "NEET Biology Complete Guide",
-      seller: "Priya S.",
-      examType: "NEET",
-      price: "Free",
-      image: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=200&h=250&fit=crop"
-    },
-    {
-      id: 3,
-      title: "CAT Quantitative Aptitude",
-      seller: "Rahul M.",
-      examType: "CAT",
-      price: "₹320",
-      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=250&fit=crop"
-    },
-    {
-      id: 4,
-      title: "UPSC History Notes",
-      seller: "Sita R.",
-      examType: "UPSC",
-      price: "Free",
-      image: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=200&h=250&fit=crop"
-    }
-  ];
 
   return (
+    <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
     <LinearGradient 
       colors={['#f0f9ff', '#ffedd5']}
       style={styles.container}
@@ -122,6 +91,7 @@ const BrowseScreen = () => {
         <Plus color="white" size={24} />
       </TouchableOpacity>
     </LinearGradient>
+    </SafeAreaView>
   );
 };
 
