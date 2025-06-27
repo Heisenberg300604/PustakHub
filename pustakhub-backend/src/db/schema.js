@@ -1,21 +1,22 @@
-import { pgTable, bigint, varchar, text, boolean, timestamp, decimal, integer, smallint } from 'drizzle-orm/pg-core';
+import { pgTable, bigint, varchar, text, boolean, timestamp, decimal, integer, smallint, uuid } from 'drizzle-orm/pg-core';
 
-export const users = pgTable('users',{
-    user_id: bigint('user_id', { mode: 'number' }).primaryKey().notNull().unique(),
-  phone_number: varchar('phone_number', { length: 15 }).notNull().unique(),
+export const users = pgTable('users', {
+  user_id: uuid('user_id').defaultRandom().primaryKey(),
+  email: varchar('email', { length: 255 }).notNull().unique(),
+  password_hash: varchar('password_hash', { length: 255 }).notNull(),
   name: varchar('name', { length: 100 }).notNull(),
   city: varchar('city', { length: 50 }).notNull(),
-  social_media_handle_1: varchar('social_media_handle_1', { length: 100 }),
-  social_media_handle_2: varchar('social_media_handle_2', { length: 100 }),
+  primary_social_handle: varchar('primary_social_handle', { length: 100 }),
+  secondary_social_handle: varchar('secondary_social_handle', { length: 100 }),
   avatar_url: text('avatar_url'),
   is_active: boolean('is_active').default(true),
   created_at: timestamp('created_at').defaultNow(),
   updated_at: timestamp('updated_at').defaultNow(),
-})
+});
 
 // EXAM_TYPES
 export const exam_types = pgTable('exam_types', {
-  exam_type_id: integer('exam_type_id').primaryKey().unique().notNull(),
+  exam_type_id: bigint('exam_type_id', { mode: 'number' }).primaryKey().unique().notNull(),
   exam_name: varchar('exam_name', { length: 50 }).notNull().unique(),
   exam_category: varchar('exam_category', { length: 30 }),
   created_at: timestamp('created_at').defaultNow(),
@@ -24,10 +25,10 @@ export const exam_types = pgTable('exam_types', {
 // BOOKS
 export const books = pgTable('books', {
   book_id: bigint('book_id', { mode: 'number' }).primaryKey(),
-  seller_id: bigint('seller_id', { mode: 'number' }).notNull().references(() => users.user_id),
+  seller_id: uuid('seller_id').notNull().references(() => users.user_id, { onDelete: 'cascade' }),
   title: varchar('title', { length: 200 }).notNull(),
   description: text('description'),
-  exam_type_id: bigint('exam_type_id', { mode: 'number' }).notNull(),
+  exam_type_id: bigint('exam_type_id', { mode: 'number' }).notNull().references(() => exam_types.exam_type_id),
   subject: varchar('subject', { length: 50 }).notNull(),
   price: decimal('price', { precision: 10, scale: 2 }),
   is_donation: boolean('is_donation').default(false),
