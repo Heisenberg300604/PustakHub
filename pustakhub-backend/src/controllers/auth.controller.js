@@ -1,10 +1,9 @@
-import { db } from " ../config/db";
-import { users } from "../db/schema";
+import { db } from "../config/db.js";
+import { users } from "../db/schema.js";
 import bcrypt from "bcrypt";
 import { eq } from "drizzle-orm";
-import { generateToken } from "../utils/jwt";
-import { registerSchema,loginSchema } from "../utils/validation";
-
+import { generateToken } from "../utils/jwt.js";
+import { registerSchema,loginSchema } from "../utils/validation.js";
 
 
 // Register new user 
@@ -133,3 +132,89 @@ export const login = async (req, res) => {
       });
     }
   };
+
+  // Get user profile
+  export const getProfile = async (req, res) => {
+    try {
+      const userId = req.user.userId; // Get the user id from the request
+  
+      // Get the user from the database
+      const [user] = await db
+        .select({
+          user_id: users.user_id,
+          email: users.email,
+          name: users.name,
+          city: users.city,
+          primary_social_handle: users.primary_social_handle,
+          secondary_social_handle: users.secondary_social_handle,
+          avatar_url: users.avatar_url,
+          created_at: users.created_at
+        })
+        .from(users)
+        .where(eq(users.user_id, userId))
+        .limit(1);
+  
+      // If the user is not found
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          message: 'User not found'
+        });
+      }
+  
+      // Send the response
+      res.json({
+        success: true,
+        user
+      });
+  
+    } catch (error) {
+      console.error('Get profile error:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Internal server error'
+      });
+    }
+  };
+  
+  // Update user profile
+  export const updateProfile = async (req, res) => {
+    try {
+      const userId = req.user.userId; // Get the user id from the request
+      const { name, city, primary_social_handle, secondary_social_handle } = req.body; // Destructure the request body
+  
+      // Update the user in the database
+      const [updatedUser] = await db
+        .update(users)
+        .set({
+          name,
+          city,
+          primary_social_handle,
+          secondary_social_handle,
+          updated_at: new Date()
+        })
+        .where(eq(users.user_id, userId))
+        .returning({
+          user_id: users.user_id,
+          email: users.email,
+          name: users.name,
+          city: users.city,
+          primary_social_handle: users.primary_social_handle,
+          secondary_social_handle: users.secondary_social_handle,
+          avatar_url: users.avatar_url
+        });
+      // Send the response
+      res.json({
+        success: true,
+        message: 'Profile updated successfully',
+        user: updatedUser
+      });
+      
+    } catch (error) {
+      console.error('Update profile error:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Internal server error'
+      });
+    }
+};

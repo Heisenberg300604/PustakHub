@@ -3,8 +3,10 @@ import { neon } from "@neondatabase/serverless";
 import { ENV } from "./env.js";
 import * as schema from "../db/schema.js";
 
+// Creates a SQL client for Neon
 const sql = neon(ENV.DATABASE_URL);
 
+// Test the database connection
 export const testConnection = async () => {
   try {
     await sql`SELECT 1`;
@@ -16,4 +18,5 @@ export const testConnection = async () => {
   }
 };
 
+// Connects Drizzle ORM with the Neon client and your schema definitions
 export const db = drizzle(sql, { schema });
