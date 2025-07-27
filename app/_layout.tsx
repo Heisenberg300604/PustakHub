@@ -1,11 +1,8 @@
 import { Slot } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
 import './globals.css';
 
 export default function RootLayout() {
   return (
-    <SafeAreaView className="flex-1">
       <Slot />
-    </SafeAreaView>
   );
 }

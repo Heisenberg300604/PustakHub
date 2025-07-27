@@ -117,7 +117,7 @@ const AuthScreen: React.FC<AuthScreenProps> = () => {
                     <View className="w-full mb-4">
                         <View className="h-12 border border-yellow-500 rounded-xl bg-white px-4 justify-center shadow-sm">
                             <TextInput
-                                className="text-base text-gray-900 placeholder:text-gray-400"
+                                className="text-base placeholder:text-gray-400"
                                 placeholder="Password"
                                 placeholderTextColor="#9E9E9E"
                                 secureTextEntry
@@ -132,7 +132,7 @@ const AuthScreen: React.FC<AuthScreenProps> = () => {
                         <View className="w-full mb-6">
                             <View className="h-12 border border-yellow-500 rounded-xl bg-white px-4 justify-center shadow-sm">
                                 <TextInput
-                                    className="text-base text-gray-900 placeholder:text-gray-400"
+                                    className="text-base placeholder:text-gray-400"
                                     placeholder="Confirm Password"
                                     placeholderTextColor="#9E9E9E"
                                     secureTextEntry
