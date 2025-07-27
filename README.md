@@ -54,7 +54,7 @@ Built with a custom backend, PustakHub ensures full control, cost efficiency (us
 - **Expo Go**: Mobile app testing.
 
 ## Technical Architecture
-<!-- ![PustakHub Architecture Diagram](./Architecture.png) -->
+
 
 ### Functional
 - **Authentication**: Email/password or phone OTP login.
