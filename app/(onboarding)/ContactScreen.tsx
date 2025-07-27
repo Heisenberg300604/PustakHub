@@ -1,4 +1,4 @@
-import { LinearGradient } from 'expo-linear-gradient';
+import { OnboardingButton } from '@/components/ui/OnboardingButton';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import {
@@ -22,7 +22,7 @@ interface ContactData {
 export default function ContactScreen() {
   const [email, setEmail] = useState<string>('');
   const [instagram, setInstagram] = useState<string>('');
-  
+
   // Email validation function
   const isValidEmail = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -71,7 +71,7 @@ export default function ContactScreen() {
     };
 
     await saveContactData(contactData);
-    
+
     console.log('Contact screen skipped');
     router.push('/FinishScreen');
     Alert.alert('Skipped', 'No contact information saved.');
@@ -80,7 +80,7 @@ export default function ContactScreen() {
   return (
     <SafeAreaView className="flex-1 bg-[#F8F9FA]">
       <StatusBar barStyle="dark-content" backgroundColor="#F8F9FA" />
-      
+
       <View className="flex-1 px-10 pt-20 items-center">
         {/* Title */}
         <Text className="text-[35px] font-bold text-[#FFB84D] text-center mb-2.5" style={{ fontFamily: 'Inter-Bold' }}>
@@ -89,7 +89,7 @@ export default function ContactScreen() {
         <Text className="text-base text-[#666] text-center mb-12">
           Share your contact details (optional)
         </Text>
-        
+
         {/* Illustration */}
         <View className="mb-12 items-center">
           <Image
@@ -98,7 +98,7 @@ export default function ContactScreen() {
             resizeMode="contain"
           />
         </View>
-        
+
         {/* Email Input Field */}
         <View className="w-full mb-6">
           <TextInput
@@ -112,7 +112,7 @@ export default function ContactScreen() {
             autoCorrect={false}
           />
         </View>
-        
+
         {/* Instagram Input Field */}
         <View className="w-full mb-6">
           <TextInput
@@ -125,33 +125,26 @@ export default function ContactScreen() {
             autoCorrect={false}
           />
         </View>
-        
+
         {/* Optional Text */}
         <Text className="text-sm text-[#888] text-center mb-10 leading-5 px-2">
           Both fields are optional. We'll use this to keep you updated and help you connect with others.
         </Text>
-        
+
         {/* Buttons Container */}
         <View className="w-full gap-4">
           {/* Skip Button */}
-          <TouchableOpacity 
+          <TouchableOpacity
             className="py-4 items-center justify-center border border-[#FFB84D] rounded-[25px] bg-transparent"
             onPress={handleSkip}
           >
             <Text className="text-[#FFB84D] text-lg font-semibold">Skip</Text>
           </TouchableOpacity>
-          
-          {/* Next Button */}
-          <TouchableOpacity className="w-full rounded-[25px] overflow-hidden" onPress={handleNext}>
-            <LinearGradient
-              colors={['#FFB84D', '#FF9500']}
-              className="py-4 items-center justify-center"
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-            >
-              <Text className="text-white text-lg font-semibold">Next</Text>
-            </LinearGradient>
-          </TouchableOpacity>
+
+          <OnboardingButton
+            label="Continue"
+            onPress={handleNext}
+          />
         </View>
       </View>
     </SafeAreaView>

@@ -1,50 +1,73 @@
-# Welcome to your Expo app 👋
+# PustakHub
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+PustakHub is a mobile application designed to empower Indian students by creating a dedicated platform for buying, selling, and donating second-hand academic books specifically for competitive exam preparation (JEE, NEET, UPSC, GATE, SSC, Board Exams, etc.).
 
-## Get started
+## Problem
 
-1. Install dependencies
+Every year, millions of Indian students prepare for highly competitive exams like JEE, NEET, UPSC, GATE, and SSC, investing significant money in exam preparation books and study materials. After the exams, these books often become unused, clutter homes, or are sold as scrap, while incoming students struggle to find affordable, high-quality study resources. Existing second-hand book marketplaces are often general-purpose, lack exam-specific categorization, and do not offer a seamless student-to-student or donation-focused experience.
 
-   ```bash
-   npm install
-   ```
+There is a clear need for a dedicated, exam-focused platform where students can easily buy, sell, or donate their study materials, help reduce waste, promote reuse, and support students from lower-income backgrounds.
 
-2. Start the app
+PustakHub addresses this gap by providing a simple, localized, and socially impactful solution.
 
-   ```bash
-   npx expo start
-   ```
+## Solution
 
-In the output, you'll find options to open the app in a
+PustakHub addresses these challenges by offering a dedicated mobile app where students can:
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+- **Buy, Sell, or Donate**: List exam-related books with photos, prices, and details.
+- **Search and Filter**: Find books by exam (e.g., JEE), location, or price.
+- **Connect in Real-Time**: Chat with buyers/sellers to negotiate or arrange meetups.
+- **Receive Notifications**: Get alerts for new messages, listings, or transactions.
+- **Match Locally**: Discover nearby users for convenient in-person exchanges.
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+Built with a custom backend, PustakHub ensures full control, cost efficiency (using free/low-cost tools), and scalability. The app leverages modern technologies to deliver a robust, production-ready solution.
 
-## Get a fresh project
+## Tech Stack
 
-When you're ready, run:
+### Frontend
+- **React Native (Expo)**: Cross-platform mobile app for iOS and Android.
+- **Libraries**:
+  - `@apollo/client`: Query GraphQL APIs for book listings and search.
+  - `react-native-image-picker`: Upload book photos to Cloudinary.
+  - `react-native-geolocation-service`: Capture user location for matching.
+  - `react-native-push-notification` & `OneSignal`: Push notifications for alerts.
+  - `@react-navigation/native`: App navigation (home, listings, chat).
 
+### Backend
+- **Node.js + Express**: REST APIs for CRUD operations and search.
+- **PostgreSQL + DrizzleORM**: Relational database with PostGIS for geolocation queries.
+- **Additional**:
+  - `jsonwebtoken` & `bcrypt`: JWT authentication and password hashing.
+  - `express-rate-limit` & `express-validator`: API security and input validation.
+  - `node-geocoder`: Convert city to coordinates for geolocation.
+
+### Storage
+- **Cloudinary**: Free 25 GB storage for book photos, with URLs in PostgreSQL.
+
+### DevOps
+- **Render**: Backend deployment for API and database hosting.
+
+### Development Tools
+- **VS Code**: Code editor with JavaScript extensions.
+- **Postman**: API testing.
+- **ESLint & Prettier**: Code consistency.
+- **Expo Go**: Mobile app testing.
+
+## Technical Architecture
+<!-- ![PustakHub Architecture Diagram](./Architecture.png) -->
+
+### Functional
+- **Authentication**: Email/password or phone OTP login.
+- **Book Listings**: Create, read, update, delete listings with title, exam, price, photo, and location.
+- **Search & Filter**: Query books by exam, location, or price.
+- **Real-Time Chat**: Messaging between buyers, sellers, and donors.(To be implemented)
+- **Notifications**: Alerts for new messages, listings, or transactions.
+- **Geolocation**: Match users by proximity (e.g., within 10 km) for meetups.
+
+
+## Getting Started
+
+### Clone the Repository
 ```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+git clone https://github.com/Heisenberg300604/PustakHub.git
+cd Pustakhub

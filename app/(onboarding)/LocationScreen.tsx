@@ -1,4 +1,4 @@
-import { LinearGradient } from 'expo-linear-gradient';
+import { OnboardingButton } from '@/components/ui/OnboardingButton';
 import * as Location from 'expo-location';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
@@ -30,10 +30,10 @@ export default function LocationScreen() {
   const getCurrentLocation = async () => {
     try {
       setIsLoadingLocation(true);
-      
+
       // Request permission
       const { status } = await Location.requestForegroundPermissionsAsync();
-      
+
       if (status !== 'granted') {
         Alert.alert(
           'Permission Denied',
@@ -58,7 +58,7 @@ export default function LocationScreen() {
       if (reverseGeocode.length > 0) {
         const address = reverseGeocode[0];
         const detectedCity = address.city || address.subregion || address.region;
-        
+
         if (detectedCity) {
           setCity(detectedCity);
           Alert.alert('Location Detected', `We found you're in ${detectedCity}`);
@@ -75,37 +75,32 @@ export default function LocationScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-[#F8F9FA]">
+   <SafeAreaView className="flex-1 bg-[#F8F9FA]">
       <StatusBar barStyle="dark-content" backgroundColor="#F8F9FA" />
-      
+
       <View className="flex-1 px-10 pt-20 items-center">
-        {/* Title */}
-        <Text className="text-[35px] font-bold text-[#FFB84D] text-center mb-15" style={{ fontFamily: 'Inter-Bold' }}>
-          Where are You From ?
+        <Text className="text-[35px] font-bold text-[#FFB84D] text-center mb-[60px]" style={{ fontFamily: 'Inter-Bold' }}>
+          Where are You From?
         </Text>
-        
-        {/* Illustration */}
-        <View className="mb-15 items-center">
+
+        <View className="mb-[80px] items-center">
           <Image
             source={require('../../assets/location.png')}
             className="w-[150px] h-[150px] rounded-[10px]"
             resizeMode="contain"
           />
         </View>
-        
-        {/* Input Field */}
-        <View className="w-full flex-row items-center mb-5">
+
+        <View className="w-full mb-[80px]">
           <TextInput
-            className="flex-1 h-[50px] border-b-2 border-[#E5E5E5] text-base py-2.5 pr-12 text-[#333]"
-            placeholder="We will match you locally"
+            className="w-full h-[50px] border-b-[2px] border-[#E5E5E5] text-[16px] py-[10px] text-[#333] pr-10"
+            placeholder="Enter your city"
             placeholderTextColor="#999"
             value={city}
             onChangeText={setCity}
           />
-          
-          {/* Location Button */}
-          <TouchableOpacity 
-            className="absolute right-2.5 bottom-2.5 w-7 h-7 justify-center items-center"
+          <TouchableOpacity
+            className="absolute right-0 bottom-3 w-8 h-8 justify-center items-center"
             onPress={getCurrentLocation}
             disabled={isLoadingLocation}
           >
@@ -116,18 +111,11 @@ export default function LocationScreen() {
             )}
           </TouchableOpacity>
         </View>
-        
-        {/* Next Button */}
-        <TouchableOpacity className="w-full rounded-[25px] overflow-hidden" onPress={handleNext}>
-          <LinearGradient
-            colors={['#FFB84D', '#FF9500']}
-            className="py-4 items-center justify-center"
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-          >
-            <Text className="text-white text-lg font-semibold">Next</Text>
-          </LinearGradient>
-        </TouchableOpacity>
+
+        <OnboardingButton 
+          label="Next" 
+          onPress={handleNext} 
+        />
       </View>
     </SafeAreaView>
   );
