@@ -1,5 +1,6 @@
 import { BookCard } from '@/components/common/BookCard';
 import { FilterChip } from '@/components/common/FilterChip';
+import { router } from 'expo-router';
 import { Search } from 'lucide-react-native';
 import React, { useState } from 'react';
 import { ScrollView, Text, TextInput, View } from 'react-native';
@@ -44,6 +45,14 @@ const mockBooks: Book[] = [
 const BrowseScreen: React.FC = () => {
   const [selectedFilter, setSelectedFilter] = useState<string>('All');
   const filters = ['All', 'JEE', 'NEET', 'CAT', 'UPSC', 'Free'];
+
+  const navigateToBookDetail = (id: string) => {
+    // For React Native with Expo Router:
+    router.push(`/books/${id}`);
+  
+    
+    console.log('Navigate to book detail:', id);
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-gray-50" edges={['top', 'left', 'right']}>
@@ -96,8 +105,8 @@ const BrowseScreen: React.FC = () => {
             <BookCard
               key={book.id}
               book={book}
-              onPress={() => console.log('Book pressed:', book.id)}
-              onBuyPress={() => console.log('Buy pressed:', book.id)}
+              onPress={() => navigateToBookDetail(book.id)}
+              onBuyPress={() => navigateToBookDetail(book.id)}
             />
           ))}
         </View>
