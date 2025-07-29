@@ -1,6 +1,7 @@
 import { OnboardingButton } from '@/components/ui/OnboardingButton';
+import { useOnboardingStore } from '@/stores/useOnboardingStore';
 import { router } from 'expo-router';
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Image,
   SafeAreaView,
@@ -11,7 +12,7 @@ import {
 } from 'react-native';
 
 export default function NameScreen() {
-  const [name, setName] = useState<string>('');
+  const { name, setField } = useOnboardingStore();
 
   const handleNext = () => {
     console.log('Name entered:', name);
@@ -43,7 +44,7 @@ export default function NameScreen() {
           placeholder="Enter Your Name"
           placeholderTextColor="#999"
           value={name}
-          onChangeText={setName}
+          onChangeText={(val) => setField('name', val)}
         />
 
         <OnboardingButton

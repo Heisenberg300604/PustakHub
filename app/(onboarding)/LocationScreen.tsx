@@ -1,4 +1,5 @@
 import { OnboardingButton } from '@/components/ui/OnboardingButton';
+import { useOnboardingStore } from '@/stores/useOnboardingStore';
 import * as Location from 'expo-location';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
@@ -15,7 +16,7 @@ import {
 } from 'react-native';
 
 export default function LocationScreen() {
-  const [city, setCity] = useState<string>('');
+  const { city, setField } = useOnboardingStore();
   const [isLoadingLocation, setIsLoadingLocation] = useState<boolean>(false);
 
   const handleNext = () => {
@@ -23,7 +24,6 @@ export default function LocationScreen() {
       Alert.alert('Required', 'Please enter your city or allow location access');
       return;
     }
-    console.log('City entered:', city);
     router.push('/ContactScreen');
   };
 
@@ -33,23 +33,20 @@ export default function LocationScreen() {
 
       // Request permission
       const { status } = await Location.requestForegroundPermissionsAsync();
-
       if (status !== 'granted') {
         Alert.alert(
           'Permission Denied',
-          'Location permission is required to detect your city automatically.',
-          [{ text: 'OK' }]
+          'Location permission is required to detect your city automatically.'
         );
-        setIsLoadingLocation(false);
         return;
       }
 
-      // Get current location
+      // Get coordinates
       const location = await Location.getCurrentPositionAsync({
         accuracy: Location.Accuracy.Balanced,
       });
 
-      // Reverse geocode to get city
+      // Reverse geocode
       const reverseGeocode = await Location.reverseGeocodeAsync({
         latitude: location.coords.latitude,
         longitude: location.coords.longitude,
@@ -60,7 +57,10 @@ export default function LocationScreen() {
         const detectedCity = address.city || address.subregion || address.region;
 
         if (detectedCity) {
-          setCity(detectedCity);
+          setField('city', detectedCity);
+          setField('latitude', location.coords.latitude);
+          setField('longitude', location.coords.longitude);
+
           Alert.alert('Location Detected', `We found you're in ${detectedCity}`);
         } else {
           Alert.alert('Location Error', 'Could not determine your city. Please enter manually.');
@@ -75,11 +75,11 @@ export default function LocationScreen() {
   };
 
   return (
-   <SafeAreaView className="flex-1 bg-[#F8F9FA]">
+    <SafeAreaView className="flex-1 bg-[#F8F9FA]">
       <StatusBar barStyle="dark-content" backgroundColor="#F8F9FA" />
 
       <View className="flex-1 px-10 pt-20 items-center">
-        <Text className="text-[35px] font-bold text-[#FFB84D] text-center mb-[60px]" style={{ fontFamily: 'Inter-Bold' }}>
+        <Text className="text-[35px] font-bold text-[#FFB84D] text-center mb-[60px]">
           Where are You From?
         </Text>
 
@@ -91,13 +91,13 @@ export default function LocationScreen() {
           />
         </View>
 
-        <View className="w-full mb-[80px]">
+        <View className="w-full mb-[80px] relative">
           <TextInput
             className="w-full h-[50px] border-b-[2px] border-[#E5E5E5] text-[16px] py-[10px] text-[#333] pr-10"
             placeholder="Enter your city"
             placeholderTextColor="#999"
             value={city}
-            onChangeText={setCity}
+            onChangeText={(val) => setField('city', val)}
           />
           <TouchableOpacity
             className="absolute right-0 bottom-3 w-8 h-8 justify-center items-center"
@@ -112,10 +112,7 @@ export default function LocationScreen() {
           </TouchableOpacity>
         </View>
 
-        <OnboardingButton 
-          label="Next" 
-          onPress={handleNext} 
-        />
+        <OnboardingButton label="Next" onPress={handleNext} />
       </View>
     </SafeAreaView>
   );

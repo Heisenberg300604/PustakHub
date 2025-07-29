@@ -2,10 +2,16 @@
   "expo": {
     "name": "PustakHub",
     "slug": "PustakHub",
+    "extra": {
+      "eas": {
+        "projectId": "your-project-id"
+      }
+    },
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/logo.png",
-    "scheme": "PustakHub",
+    "scheme": "yourapp",
+    "platforms": ["ios", "android", "web"],
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -33,7 +39,8 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
-      ]
+      ],
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true

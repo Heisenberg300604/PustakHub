@@ -7,7 +7,7 @@ export default function Index() {
     const timeout = setTimeout(() => {
       router.replace('/(auth)/AuthScreen');
     }, 2500); // 2 seconds splash
-
+    // AsyncStorage.clear().then(() => console.log('AsyncStorage cleared'));
     return () => clearTimeout(timeout);
   }, []);
 

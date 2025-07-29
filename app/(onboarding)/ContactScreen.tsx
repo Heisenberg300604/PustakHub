@@ -1,4 +1,5 @@
 import { OnboardingButton } from '@/components/ui/OnboardingButton';
+import { useOnboardingStore } from '@/stores/useOnboardingStore';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import {
@@ -12,140 +13,134 @@ import {
   View,
 } from 'react-native';
 
-interface ContactData {
-  email: string;
-  instagram: string;
-  skipped?: boolean;
-  timestamp: string;
-}
-
 export default function ContactScreen() {
-  const [email, setEmail] = useState<string>('');
-  const [instagram, setInstagram] = useState<string>('');
+  const {
+    phone,
+    instagram,
+    telegram,
+    primaryContactType,
+    setField,
+  } = useOnboardingStore();
 
-  // Email validation function
-  const isValidEmail = (email: string): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
+  const [selectedPrimary, setSelectedPrimary] = useState<
+    'phone' | 'instagram' | 'telegram'
+  >(primaryContactType || 'phone');
 
-  // Save data to AsyncStorage
-  const saveContactData = async (contactData: ContactData) => {
-    try {
-      console.log('Contact data saved:', contactData);
-    } catch (error) {
-      console.error('Error saving contact data:', error);
-    }
-  };
-
-  const handleNext = async () => {
-    // Validate email if entered
-    if (email.trim() !== '' && !isValidEmail(email.trim())) {
-      Alert.alert('Invalid Email', 'Please enter a valid email address');
+  const handleNext = () => {
+    // Check if at least one contact method is provided
+    if (!(phone ?? '').trim() && !(instagram ?? '').trim() && !(telegram ?? '').trim()) {
+      Alert.alert('Required', 'Please provide at least one contact method.');
       return;
     }
 
-    // Prepare contact data
-    const contactData: ContactData = {
-      email: email.trim(),
-      instagram: instagram.trim(),
-      timestamp: new Date().toISOString(),
-    };
+    // Save primary contact type
+    setField('primaryContactType', selectedPrimary);
 
-    // Save data
-    // await saveContactData(contactData);
-
-    // Navigate to FinishScreen
-    console.log('Contact data collected:', contactData);
-    Alert.alert('Success', 'Contact information saved successfully!');
+    // Navigate to final screen
     router.push('/FinishScreen');
-  };
-
-  const handleSkip = async () => {
-    // Save empty contact data
-    const contactData: ContactData = {
-      email: '',
-      instagram: '',
-      skipped: true,
-      timestamp: new Date().toISOString(),
-    };
-
-    await saveContactData(contactData);
-
-    console.log('Contact screen skipped');
-    router.push('/FinishScreen');
-    Alert.alert('Skipped', 'No contact information saved.');
   };
 
   return (
     <SafeAreaView className="flex-1 bg-[#F8F9FA]">
       <StatusBar barStyle="dark-content" backgroundColor="#F8F9FA" />
 
-      <View className="flex-1 px-10 pt-20 items-center">
+      <View className="flex-1 px-10 pt-16 items-center">
         {/* Title */}
-        <Text className="text-[35px] font-bold text-[#FFB84D] text-center mb-2.5" style={{ fontFamily: 'Inter-Bold' }}>
+        <Text className="text-[32px] font-bold text-[#FFB84D] text-center mb-2">
           Stay Connected
         </Text>
-        <Text className="text-base text-[#666] text-center mb-12">
-          Share your contact details (optional)
+        <Text className="text-base text-[#666] text-center mb-10">
+          Provide at least one contact method & mark one as primary.
         </Text>
 
         {/* Illustration */}
-        <View className="mb-12 items-center">
+        <View className="mb-10 items-center">
           <Image
             source={require('../../assets/socials.png')}
-            className="w-[150px] h-[150px] rounded-[10px]"
+            className="w-[140px] h-[140px] rounded-[10px]"
             resizeMode="contain"
           />
         </View>
 
-        {/* Email Input Field */}
+        {/* Phone Input */}
         <View className="w-full mb-6">
           <TextInput
             className="w-full h-[50px] border-b-2 border-[#E5E5E5] text-base py-2.5 px-1 text-[#333]"
-            placeholder="Enter your email address"
+            placeholder="Mobile / WhatsApp number"
             placeholderTextColor="#999"
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-            autoCapitalize="none"
-            autoCorrect={false}
+            value={phone}
+            onChangeText={(val) => setField('phone', val)}
+            keyboardType="phone-pad"
           />
+          <TouchableOpacity
+            className="absolute right-2 bottom-3"
+            onPress={() => setSelectedPrimary('phone')}
+          >
+            <Text
+              className={`text-sm font-semibold ${
+                selectedPrimary === 'phone' ? 'text-[#FFB84D]' : 'text-[#999]'
+              }`}
+            >
+              Primary
+            </Text>
+          </TouchableOpacity>
         </View>
 
-        {/* Instagram Input Field */}
+        {/* Instagram Input */}
         <View className="w-full mb-6">
           <TextInput
             className="w-full h-[50px] border-b-2 border-[#E5E5E5] text-base py-2.5 px-1 text-[#333]"
-            placeholder="Instagram profile link or username"
+            placeholder="Instagram username"
             placeholderTextColor="#999"
             value={instagram}
-            onChangeText={setInstagram}
+            onChangeText={(val) => setField('instagram', val)}
             autoCapitalize="none"
-            autoCorrect={false}
           />
+          <TouchableOpacity
+            className="absolute right-2 bottom-3"
+            onPress={() => setSelectedPrimary('instagram')}
+          >
+            <Text
+              className={`text-sm font-semibold ${
+                selectedPrimary === 'instagram' ? 'text-[#FFB84D]' : 'text-[#999]'
+              }`}
+            >
+              Primary
+            </Text>
+          </TouchableOpacity>
         </View>
 
-        {/* Optional Text */}
-        <Text className="text-sm text-[#888] text-center mb-10 leading-5 px-2">
-          Both fields are optional. We'll use this to keep you updated and help you connect with others.
+        {/* Telegram Input */}
+        <View className="w-full mb-6">
+          <TextInput
+            className="w-full h-[50px] border-b-2 border-[#E5E5E5] text-base py-2.5 px-1 text-[#333]"
+            placeholder="Telegram username"
+            placeholderTextColor="#999"
+            value={telegram}
+            onChangeText={(val) => setField('telegram', val)}
+            autoCapitalize="none"
+          />
+          <TouchableOpacity
+            className="absolute right-2 bottom-3"
+            onPress={() => setSelectedPrimary('telegram')}
+          >
+            <Text
+              className={`text-sm font-semibold ${
+                selectedPrimary === 'telegram' ? 'text-[#FFB84D]' : 'text-[#999]'
+              }`}
+            >
+              Primary
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Info text */}
+        <Text className="text-sm text-[#888] text-center mb-10 px-4">
+          At least one contact is required. You can choose which one is primary.
         </Text>
 
-        {/* Buttons Container */}
-        <View className="w-full gap-4">
-          {/* Skip Button */}
-          <TouchableOpacity
-            className="py-4 items-center justify-center border border-[#FFB84D] rounded-[25px] bg-transparent"
-            onPress={handleSkip}
-          >
-            <Text className="text-[#FFB84D] text-lg font-semibold">Skip</Text>
-          </TouchableOpacity>
-
-          <OnboardingButton
-            label="Continue"
-            onPress={handleNext}
-          />
-        </View>
+        {/* Continue Button */}
+        <OnboardingButton label="Continue" onPress={handleNext} />
       </View>
     </SafeAreaView>
   );
