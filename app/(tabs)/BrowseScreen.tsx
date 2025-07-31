@@ -1,8 +1,9 @@
 import { BookCard } from '@/components/common/BookCard';
 import { FilterChip } from '@/components/common/FilterChip';
+import { supabase } from '@/lib/supabase';
 import { router } from 'expo-router';
 import { Search } from 'lucide-react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ScrollView, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Book } from '../../types/books';
@@ -43,6 +44,7 @@ const mockBooks: Book[] = [
 ];
 
 const BrowseScreen: React.FC = () => {
+  const [userName, setUserName] = useState('User');
   const [selectedFilter, setSelectedFilter] = useState<string>('All');
   const filters = ['All', 'JEE', 'NEET', 'CAT', 'UPSC', 'Free'];
 
@@ -54,6 +56,15 @@ const BrowseScreen: React.FC = () => {
     console.log('Navigate to book detail:', id);
   };
 
+  useEffect(() => {
+  const fetchUser = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    setUserName(user?.user_metadata?.name || 'User');
+  };
+  
+  fetchUser();
+}, []);
+
   return (
     <SafeAreaView className="flex-1 bg-gray-50" edges={['top', 'left', 'right']}>
       <ScrollView
@@ -62,8 +73,8 @@ const BrowseScreen: React.FC = () => {
       >
         {/* Header */}
         <View className="mb-6 px-5 pt-4">
-          <Text className="text-3xl font-bold text-gray-900 mb-4">
-            Welcome Back, User
+          <Text className="text-2xl font-bold text-gray-900 mb-4">
+            Welcome Back, {userName} !
           </Text>
           
           {/* Search Bar */}

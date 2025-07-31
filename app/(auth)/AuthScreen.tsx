@@ -1,12 +1,10 @@
 import AuthButton from '@/components/auth/AuthButton';
-import AuthDivider from '@/components/auth/AuthDivider';
-import AuthGoogleButton from '@/components/auth/AuthGoogleButton';
 import AuthHeader from '@/components/auth/AuthHeader';
 import AuthInput from '@/components/auth/AuthInput';
 import ToggleAuthMode from '@/components/auth/ToggleAuthMode';
-import { getProfile, signIn, signInWithGoogle, signUp } from '@/services/authService';
+import { supabase } from '@/lib/supabase';
+import { getProfile, signIn, signUp } from '@/services/authService';
 import { router } from 'expo-router';
-import * as WebBrowser from 'expo-web-browser';
 import React, { useState } from 'react';
 import { Alert, Image, KeyboardAvoidingView, Platform, SafeAreaView, View } from 'react-native';
 
@@ -54,6 +52,9 @@ const AuthScreen = () => {
                     router.replace('/(tabs)/BrowseScreen');
                 }
             }
+            // just to ensure we have the session
+            const { data: { session }, error } = await supabase.auth.getSession();
+            console.log('Session:', session);
         } catch (error: any) {
             Alert.alert('Auth Error', error.message);
         } finally {
@@ -87,21 +88,6 @@ const AuthScreen = () => {
                     )}
 
                     <AuthButton title={authMode === 'register' ? 'Create Account' : 'Sign In'} onPress={handleEmailAuth} />
-
-                    <AuthDivider />
-                    <AuthGoogleButton
-  onPress={async () => {
-    try {
-      const result = await signInWithGoogle();
-      if (result?.url) {
-        // Open Google login in browser
-        await WebBrowser.openAuthSessionAsync(result.url);
-      }
-    } catch (e) {
-      console.log('Google login failed', e);
-    }
-  }}
-/>
                     <ToggleAuthMode mode={authMode} onToggle={() => setAuthMode(authMode === 'login' ? 'register' : 'login')} />
                 </View>
             </KeyboardAvoidingView>

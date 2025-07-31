@@ -1,29 +1,4 @@
 import { supabase } from '@/lib/supabase';
-import * as Linking from 'expo-linking';
-import * as WebBrowser from 'expo-web-browser';
-
-// Handle OAuth redirect for Expo
-WebBrowser.maybeCompleteAuthSession();
-
-export const signInWithGoogle = async () => {
-  try {
-    const redirectUrl = Linking.createURL('/' ,{ scheme: 'yourapp' });
-
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: redirectUrl, // Must match the app redirect in Supabase dashboard
-      },
-    });
-
-    if (error) throw error;
-
-    return data; // data.url will open Google login
-  } catch (error) {
-    console.error('Google login error:', error);
-    throw error;
-  }
-};
 
 export const signUp = async (email: string, password: string) => {
   const { data, error } = await supabase.auth.signUp({ email, password });
@@ -67,6 +42,7 @@ export const getProfile = async (userId: string) => {
     .single();
 };
 
+// crucial for onboarding screen to update profile
 export const updateProfile = async (profileData: {
   name: string;
   city: string;
