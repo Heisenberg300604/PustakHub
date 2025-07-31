@@ -3,13 +3,67 @@ import { CustomButton } from '@/components/common/CustomButton';
 import { CustomDropdown } from '@/components/common/CustomDropdown';
 import { CustomInput } from '@/components/common/CustomInput';
 import { ImageUpload } from '@/components/common/ImageUpload';
+import { createDonation } from '@/services/listing/donationService';
+import * as ImagePicker from 'expo-image-picker';
 import { BookOpen, FileText, Gift, Heart, Info, Package, Tag } from 'lucide-react-native';
 import React, { useState } from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { Alert, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { DropdownOption } from '../../types/dropdown';
 
 const DonateScreen: React.FC = () => {
+  const [images, setImages] = useState<(string | null)[]>([null, null, null, null]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const pickImage = async (index: number) => {
+    try {
+      // Request permission first
+      const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      
+      if (permissionResult.granted === false) {
+        Alert.alert('Permission Required', 'Permission to access camera roll is required!');
+        return;
+      }
+
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ['images'],
+        allowsEditing: true, // Enable editing for consistent output
+        quality: 0.8, // Reduce quality slightly to manage file size
+        aspect: [4, 3],
+        allowsMultipleSelection: false,
+        // Add these options for better compatibility
+        exif: false, // Don't include EXIF data
+        base64: false, // We'll handle base64 conversion in upload service
+      });
+
+      if (!result.canceled && result.assets[0]) {
+        const asset = result.assets[0];
+        
+        // Log asset information for debugging
+        console.log('Selected asset:', {
+          uri: asset.uri,
+          width: asset.width,
+          height: asset.height,
+          type: asset.type,
+          fileSize: asset.fileSize
+        });
+
+        const newImages = [...images];
+        newImages[index] = asset.uri;
+        setImages(newImages);
+      }
+    } catch (error) {
+      console.error('Error picking image:', error);
+      Alert.alert('Error', 'Failed to pick image. Please try again.');
+    }
+  };
+
+  const removeImage = (index: number) => {
+    const newImages = [...images];
+    newImages[index] = null;
+    setImages(newImages);
+  };
+
   const [formData, setFormData] = useState({
     title: '',
     author: '',
@@ -36,12 +90,12 @@ const DonateScreen: React.FC = () => {
     { label: 'Other', value: 'other' },
   ];
 
-  const bookConditions: DropdownOption[] = [
-    { label: 'Like New', value: 'like_new' },
-    { label: 'Good', value: 'good' },
-    { label: 'Fair', value: 'fair' },
-    { label: 'Poor', value: 'poor' },
-  ];
+  const bookConditions = [
+  { label: 'New', value: 'new' },
+  { label: 'Like New', value: 'like-new' },
+  { label: 'Used', value: 'used' },
+  { label: 'Heavily Used', value: 'heavily-used' }
+];
 
   const categories: DropdownOption[] = [
     { label: 'Physics', value: 'physics' },
@@ -55,8 +109,70 @@ const DonateScreen: React.FC = () => {
     { label: 'Other', value: 'other' },
   ];
 
-  const handleSubmit = () => {
-    console.log('Donation submitted:', formData);
+  const handleSubmit = async () => {
+    // Validate main fields
+    if (!formData.title.trim()) {
+      Alert.alert('Error', 'Please enter book title');
+      return;
+    }
+    
+    if (!formData.selectedExam) {
+      Alert.alert('Error', 'Please select exam type');
+      return;
+    }
+    
+    if (!formData.selectedCategory) {
+      Alert.alert('Error', 'Please select subject category');
+      return;
+    }
+    
+    if (!formData.selectedCondition) {
+      Alert.alert('Error', 'Please select book condition');
+      return;
+    }
+
+    // Check if main image is uploaded
+    if (!images[0]) {
+      Alert.alert('Error', 'Please upload at least one book photo');
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      await createDonation({
+        ...formData,
+        images: images, // Keep as is, uploadService will filter null values
+      });
+      
+      Alert.alert('Success', 'Book donated successfully! Thank you for helping fellow students.', [
+        {
+          text: 'OK',
+          onPress: () => {
+            // Reset form
+            setFormData({
+              title: '',
+              author: '',
+              edition: '',
+              publisher: '',
+              selectedExam: '',
+              selectedCondition: '',
+              selectedCategory: '',
+              description: '',
+              message: '',
+              includeAnswerKey: false,
+              allowPickup: false,
+            });
+            setImages([null, null, null, null]);
+          }
+        }
+      ]);
+    } catch (error) {
+      console.error('Error creating donation:', error);
+      Alert.alert('Error', 'Something went wrong while donating the book. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -78,21 +194,26 @@ const DonateScreen: React.FC = () => {
           <View className="mb-8">
             <Text className="text-xl font-bold text-gray-900 mb-1">Book Photos</Text>
             <Text className="text-sm text-gray-600 mb-4">
-              Clear photos help students identify the right book
+              Clear photos help students identify the right book (First photo is required)
             </Text>
 
             <View className="gap-3">
               <ImageUpload
-                onPress={() => console.log('Main photo pressed')}
+                onPress={() => pickImage(0)}
+                onRemove={() => removeImage(0)}
                 isMain={true}
                 variant="donate"
+                imageUri={images[0]}
               />
 
               <View className="flex-row gap-2">
-                {[1, 2, 3].map((item) => (
+                {[1, 2, 3].map((index) => (
                   <ImageUpload
-                    key={item}
-                    onPress={() => console.log(`Additional photo ${item} pressed`)}
+                    key={index}
+                    onPress={() => pickImage(index)}
+                    onRemove={() => removeImage(index)}
+                    imageUri={images[index]}
+                    variant="donate"
                   />
                 ))}
               </View>
@@ -233,12 +354,13 @@ const DonateScreen: React.FC = () => {
 
           {/* Submit Button */}
           <CustomButton
-            title="Donate Book"
+            title={isSubmitting ? "Donating..." : "Donate Book"}
             onPress={handleSubmit}
             variant="success"
             size="lg"
             icon={Gift}
             fullWidth
+            disabled={isSubmitting}
           />
 
           {/* Info Box */}
