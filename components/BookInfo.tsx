@@ -1,4 +1,4 @@
-import { Clock, MapPin, Star } from 'lucide-react-native';
+import { Clock, MapPin } from 'lucide-react-native';
 import React from 'react';
 import { Text, View } from 'react-native';
 
@@ -8,8 +8,6 @@ type BookInfoProps = {
   edition: string;
   originalPrice?: string;
   price: string;
-  rating: number;
-  reviewCount: number;
   examType: string;
   subject: string;
   includeAnswerKey: boolean;
@@ -46,11 +44,7 @@ const BookInfo: React.FC<BookInfoProps> = (props) => {
 
       {/* Rating and Reviews */}
       <View className="flex-row items-center mb-4">
-        <View className="flex-row items-center mr-4">
-          <Star color="#fbbf24" size={16} fill="#fbbf24" />
-          <Text className="text-base font-semibold text-gray-900 ml-1">{props.rating}</Text>
-          <Text className="text-sm text-gray-500 ml-1">({props.reviewCount} reviews)</Text>
-        </View>
+        
         
         <View className="flex-row items-center">
           <Clock color="#6b7280" size={16} />

@@ -121,8 +121,7 @@ export const getListings = async (type?: 'sale' | 'donation') => {
       .select(`
         *,
         profiles:user_id (
-          full_name,
-          avatar_url
+          name
         )
       `)
       .eq('status', 'available')

@@ -1,7 +1,19 @@
-import { Calendar, Instagram, MapPin, MessageCircle, Phone, Shield, Star, User } from 'lucide-react-native';
+// SellerInfo.tsx (Fixed)
+import { Calendar, Instagram, MapPin, MessageCircle, Phone, User } from 'lucide-react-native';
 import React from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
-import { Seller } from '../types/BookDetail';
+
+interface Seller {
+  name: string;
+  city: string;
+  phone: string | null;
+  instagram: string | null;
+  telegram: string | null;
+  memberSince: string;
+  rating: number;
+  totalBooks: number;
+  avatar: string;
+}
 
 type SellerInfoProps = {
   seller: Seller;
@@ -9,13 +21,58 @@ type SellerInfoProps = {
 };
 
 const SellerInfo: React.FC<SellerInfoProps> = ({ seller, onContact }) => {
+  // Get available contact methods
+  const getAvailableContactMethods = () => {
+    const methods = [];
+    
+    if (seller.phone) {
+      methods.push({
+        type: 'phone' as const,
+        label: 'Call',
+        icon: Phone,
+        bgColor: 'bg-green-50',
+        borderColor: 'border-green-200',
+        textColor: 'text-green-700',
+        iconColor: '#10b981'
+      });
+    }
+    
+    if (seller.instagram) {
+      methods.push({
+        type: 'instagram' as const,
+        label: 'Instagram',
+        icon: Instagram,
+        bgColor: 'bg-pink-50',
+        borderColor: 'border-pink-200',
+        textColor: 'text-pink-700',
+        iconColor: '#ec4899'
+      });
+    }
+    
+    if (seller.telegram) {
+      methods.push({
+        type: 'telegram' as const,
+        label: 'Telegram',
+        icon: MessageCircle,
+        bgColor: 'bg-blue-50',
+        borderColor: 'border-blue-200',
+        textColor: 'text-blue-700',
+        iconColor: '#3b82f6'
+      });
+    }
+    
+    return methods;
+  };
+
+  const contactMethods = getAvailableContactMethods();
+
   return (
     <View className="bg-white mx-5 rounded-2xl p-6 shadow-lg shadow-gray-200/50 mb-6">
       <Text className="text-xl font-bold text-gray-900 mb-4">Seller Information</Text>
       
       <View className="flex-row items-center mb-4">
         <View className="w-16 h-16 bg-orange-100 rounded-2xl justify-center items-center mr-4">
-          {seller.avatar ? (
+          {seller.avatar && seller.avatar !== 'https://via.placeholder.com/150x150?text=User' ? (
             <Image source={{ uri: seller.avatar }} className="w-16 h-16 rounded-2xl" />
           ) : (
             <User color="#f97316" size={24} />
@@ -28,18 +85,7 @@ const SellerInfo: React.FC<SellerInfoProps> = ({ seller, onContact }) => {
             <MapPin color="#6b7280" size={14} />
             <Text className="text-sm text-gray-600 ml-1">{seller.city}</Text>
           </View>
-          <View className="flex-row items-center">
-            <Star color="#fbbf24" size={14} fill="#fbbf24" />
-            <Text className="text-sm font-semibold text-gray-900 ml-1">{seller.rating}</Text>
-            <Text className="text-sm text-gray-500 ml-1">• {seller.totalBooks} books</Text>
-          </View>
-        </View>
-        
-        <View className="items-center">
-          <View className="w-10 h-10 bg-green-50 rounded-xl justify-center items-center mb-1">
-            <Shield color="#10b981" size={18} />
-          </View>
-          <Text className="text-xs text-green-600 font-semibold">Verified</Text>
+          {/* Removed rating display as requested */}
         </View>
       </View>
 
@@ -50,37 +96,44 @@ const SellerInfo: React.FC<SellerInfoProps> = ({ seller, onContact }) => {
         </View>
       </View>
 
-      {/* Contact Options */}
-      <Text className="text-base font-semibold text-gray-900 mb-3">Contact Seller</Text>
-      <View className="flex-row gap-3">
-        <TouchableOpacity
-          onPress={() => onContact('phone')}
-          className="flex-1 bg-green-50 border border-green-200 rounded-xl p-4 items-center"
-        >
-          <Phone color="#10b981" size={20} />
-          <Text className="text-green-700 font-semibold text-sm mt-2">Call</Text>
-        </TouchableOpacity>
-        
-        {seller.instagram && (
-          <TouchableOpacity
-            onPress={() => onContact('instagram')}
-            className="flex-1 bg-pink-50 border border-pink-200 rounded-xl p-4 items-center"
-          >
-            <Instagram color="#ec4899" size={20} />
-            <Text className="text-pink-700 font-semibold text-sm mt-2">Instagram</Text>
-          </TouchableOpacity>
-        )}
-        
-        {seller.telegram && (
-          <TouchableOpacity
-            onPress={() => onContact('telegram')}
-            className="flex-1 bg-blue-50 border border-blue-200 rounded-xl p-4 items-center"
-          >
-            <MessageCircle color="#3b82f6" size={20} />
-            <Text className="text-blue-700 font-semibold text-sm mt-2">Telegram</Text>
-          </TouchableOpacity>
-        )}
-      </View>
+      {/* Contact Options - Only show if methods are available */}
+      {contactMethods.length > 0 ? (
+        <>
+          <Text className="text-base font-semibold text-gray-900 mb-3">Contact Seller</Text>
+          <View className="flex-row gap-3">
+            {contactMethods.map((method) => {
+              const IconComponent = method.icon;
+              return (
+                <TouchableOpacity
+                  key={method.type}
+                  onPress={() => onContact(method.type)}
+                  className={`flex-1 ${method.bgColor} border ${method.borderColor} rounded-xl p-4 items-center`}
+                >
+                  <IconComponent color={method.iconColor} size={20} />
+                  <Text className={`${method.textColor} font-semibold text-sm mt-2`}>
+                    {method.label}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        </>
+      ) : (
+        /* No Contact Methods Available */
+        <View className="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
+          <View className="flex-row items-center justify-center">
+            <User color="#f59e0b" size={20} />
+            <View className="ml-3 flex-1">
+              <Text className="text-yellow-800 font-semibold text-sm">
+                Contact information not available
+              </Text>
+              <Text className="text-yellow-700 text-xs mt-1">
+                This seller hasn't provided contact details yet.
+              </Text>
+            </View>
+          </View>
+        </View>
+      )}
     </View>
   );
 };
