@@ -26,30 +26,22 @@ Built with a custom backend, PustakHub ensures full control, cost efficiency (us
 
 ### Frontend
 - **React Native (Expo)**: Cross-platform mobile app for iOS and Android.
+- **TypeScript**: Type-safe JavaScript development
+- **NativeWind**: Utility-first styling using Tailwind CSS syntax
 - **Libraries**:
-  - `@apollo/client`: Query GraphQL APIs for book listings and search.
-  - `react-native-image-picker`: Upload book photos to Cloudinary.
-  - `react-native-geolocation-service`: Capture user location for matching.
-  - `react-native-push-notification` & `OneSignal`: Push notifications for alerts.
-  - `@react-navigation/native`: App navigation (home, listings, chat).
+  - `@supabase/supabase-js`: Supabase client for authentication and database operations
+  - `react-native-image-picker`: Upload book photos to Supabase Storage
+  - `react-native-geolocation-service`:  Capture user location for matching
 
-### Backend
-- **Node.js + Express**: REST APIs for CRUD operations and search.
-- **PostgreSQL + DrizzleORM**: Relational database with PostGIS for geolocation queries.
-- **Additional**:
-  - `jsonwebtoken` & `bcrypt`: JWT authentication and password hashing.
-  - `express-rate-limit` & `express-validator`: API security and input validation.
-  - `node-geocoder`: Convert city to coordinates for geolocation.
-
-### Storage
-- **Cloudinary**: Free 25 GB storage for book photos, with URLs in PostgreSQL.
-
-### DevOps
-- **Render**: Backend deployment for API and database hosting.
+### Backend & Database
+- **Supabase**: Complete backend solution including:
+  - Authentication (email/password, social logins[github to be implemented])
+  - PostgreSQL database with real-time capabilities
+  - Storage for book images
+  - Edge Functions for custom business logic
 
 ### Development Tools
 - **VS Code**: Code editor with JavaScript extensions.
-- **Postman**: API testing.
 - **ESLint & Prettier**: Code consistency.
 - **Expo Go**: Mobile app testing.
 
@@ -57,7 +49,7 @@ Built with a custom backend, PustakHub ensures full control, cost efficiency (us
 
 
 ### Functional
-- **Authentication**: Email/password or phone OTP login.
+- **Authentication**: Email/password login.
 - **Book Listings**: Create, read, update, delete listings with title, exam, price, photo, and location.
 - **Search & Filter**: Query books by exam, location, or price.
 - **Real-Time Chat**: Messaging between buyers, sellers, and donors.(To be implemented)
