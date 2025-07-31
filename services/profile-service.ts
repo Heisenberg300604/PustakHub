@@ -65,7 +65,9 @@ export class ProfileService {
           title: book.title,
           subject: book.subject,
           price: `₹${book.price}`,
-          image: book.image_url || 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&h=300&fit=crop',
+          images: book.images && book.images.length > 0
+          ? book.images
+          : ['https://media.istockphoto.com/id/183890264/photo/upright-red-book-with-clipping-path.jpg?s=612x612&w=0&k=20&c=zm6sEPnc4zK4MNj307pm3tzgxTbex2sOnb1Ip5hglaA='],
           status: book.status
         }));
       }

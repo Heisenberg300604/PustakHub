@@ -11,6 +11,9 @@ interface MyBooksProps {
 }
 
 export const MyBooks: React.FC<MyBooksProps> = ({ books, onBookPress, onViewAllPress }) => {
+  // console.log('MyBooks component rendered with books:', books);
+  // console.log('Number of books:', books.length);
+  // console.log('First book details:', books[1]);
   return (
     <View className="mx-5 mb-6">
       <View className="flex-row justify-between items-center mb-4">
@@ -23,13 +26,13 @@ export const MyBooks: React.FC<MyBooksProps> = ({ books, onBookPress, onViewAllP
       <View className="bg-white rounded-2xl p-4 shadow-lg shadow-gray-200/50">
         {books.length > 0 ? (
           books.slice(0, 3).map((book, index) => (
-            <TouchableOpacity 
-              key={book.id} 
+            <TouchableOpacity
+              key={book.id}
               className={`flex-row items-center py-4 ${index !== books.slice(0, 3).length - 1 ? 'border-b border-gray-100' : ''}`}
               onPress={() => onBookPress(book.id)}
             >
-              <Image 
-                source={{ uri: book.image }}
+              <Image
+                source={{ uri: book.images && book.images.length > 0 ? book.images[0] : 'https://media.istockphoto.com/id/183890264/photo/upright-red-book-with-clipping-path.jpg?s=612x612&w=0&k=20&c=zm6sEPnc4zK4MNj307pm3tzgxTbex2sOnb1Ip5hglaA=' }}
                 className="w-16 h-20 rounded-xl bg-gray-100"
               />
               <View className="flex-1 ml-4">
@@ -41,14 +44,12 @@ export const MyBooks: React.FC<MyBooksProps> = ({ books, onBookPress, onViewAllP
                 </Text>
                 <View className="flex-row items-center justify-between">
                   <Text className="text-lg font-bold text-orange-500">{book.price}</Text>
-                  <View className={`px-3 py-1 rounded-full ${
-                    book.status === 'Active' 
-                      ? 'bg-emerald-50 border border-emerald-200' 
+                  <View className={`px-3 py-1 rounded-full ${book.status === 'Active'
+                      ? 'bg-emerald-50 border border-emerald-200'
                       : 'bg-gray-50 border border-gray-200'
-                  }`}>
-                    <Text className={`text-xs font-semibold ${
-                      book.status === 'Active' ? 'text-emerald-600' : 'text-gray-600'
                     }`}>
+                    <Text className={`text-xs font-semibold ${book.status === 'Active' ? 'text-emerald-600' : 'text-gray-600'
+                      }`}>
                       {book.status}
                     </Text>
                   </View>

@@ -16,7 +16,7 @@ export interface Book {
   title: string;
   subject: string;
   price: string;
-  image: string;
+  images?: string[];
   status: 'Active' | 'Sold';
 }
 

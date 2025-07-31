@@ -16,32 +16,47 @@ const SellScreen: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const pickImage = async (index: number) => {
-    try {
-      // Request permission first
-      const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-      
-      if (permissionResult.granted === false) {
-        Alert.alert('Permission Required', 'Permission to access camera roll is required!');
-        return;
-      }
+  try {
+    // Request permission first
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    
+    if (permissionResult.granted === false) {
+      Alert.alert('Permission Required', 'Permission to access camera roll is required!');
+      return;
+    }
 
-      const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ['images'],
-        allowsEditing: true,
-        quality: 0.8,
-        aspect: [4, 3],
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      allowsEditing: true, // Enable editing for consistent output
+      quality: 0.8, // Reduce quality slightly to manage file size
+      aspect: [4, 3],
+      allowsMultipleSelection: false,
+      // Add these options for better compatibility
+      exif: false, // Don't include EXIF data
+      base64: false, // We'll handle base64 conversion in upload service
+    });
+
+    if (!result.canceled && result.assets[0]) {
+      const asset = result.assets[0];
+      
+      // Log asset information for debugging
+      console.log('Selected asset:', {
+        uri: asset.uri,
+        width: asset.width,
+        height: asset.height,
+        type: asset.type,
+        fileSize: asset.fileSize
       });
 
-      if (!result.canceled && result.assets[0]) {
-        const newImages = [...images];
-        newImages[index] = result.assets[0].uri;
-        setImages(newImages);
-      }
-    } catch (error) {
-      console.error('Error picking image:', error);
-      Alert.alert('Error', 'Failed to pick image. Please try again.');
+      const newImages = [...images];
+      newImages[index] = asset.uri;
+      setImages(newImages);
     }
-  };
+  } catch (error) {
+    console.error('Error picking image:', error);
+    Alert.alert('Error', 'Failed to pick image. Please try again.');
+  }
+};
 
   const removeImage = (index: number) => {
     const newImages = [...images];
