@@ -8,12 +8,17 @@ export const signUp = async (email: string, password: string) => {
 
   // Insert empty profile row only if sign up is successful
   if (user) {
-    await supabase.from('profiles').insert({
+    const { error: profileError } = await supabase.from('profiles').insert({
       id: user.id,
       name: '',  // will be filled during onboarding
       city: '',  // will be filled during onboarding
       primary_contact_type: 'phone' // default, can be updated
     });
+    
+    if (profileError) {
+      console.error('Profile creation error:', profileError);
+      return { user: null, error: profileError };
+    }
   }
 
   return { user, error: null };

@@ -1,5 +1,5 @@
 import { supabase } from '@/lib/supabase';
-import * as FileSystem from 'expo-file-system';
+import * as FileSystem from 'expo-file-system/legacy';
 
 export const uploadImages = async (images: (string | null)[], userId: string): Promise<string[]> => {
   const urls: string[] = [];
@@ -17,17 +17,18 @@ export const uploadImages = async (images: (string | null)[], userId: string): P
     // Generate unique identifiers
     const timestamp = Date.now();
     const randomId = Math.random().toString(36).substring(2);
+    let mimeType: string = 'image/jpeg'; // Initialize outside try block for error handling
+    let filename: string = '';
 
     try {
       console.log(`Uploading image ${i + 1}/${validImages.length}`);
       console.log("Original URI:", img);
 
       let imageData: string;
-      let mimeType: string = 'image/jpeg'; // Default fallback
 
       // Check if it's a local file URI (starts with file://)
       if (img.startsWith('file://')) {
-        // Read the file as base64 using Expo FileSystem
+        // Read the file as base64 using Expo FileSystem (legacy API)
         const fileInfo = await FileSystem.getInfoAsync(img);
         
         if (!fileInfo.exists) {
@@ -97,7 +98,7 @@ export const uploadImages = async (images: (string | null)[], userId: string): P
 
       // Determine file extension from MIME type
       const extension = mimeType.split('/')[1] === 'jpeg' ? 'jpg' : mimeType.split('/')[1];
-      const filename = `${userId}/${timestamp}-${i}-${randomId}.${extension}`;
+      filename = `${userId}/${timestamp}-${i}-${randomId}.${extension}`;
 
       console.log("Uploading filename:", filename);
       console.log("File size in bytes:", bytes.length);
@@ -138,11 +139,11 @@ export const uploadImages = async (images: (string | null)[], userId: string): P
 
       // Cleanup any partially uploaded file
       try {
-        const extension = mimeType.split('/')[1] === 'jpeg' ? 'jpg' : mimeType.split('/')[1];
-        const filename = `${userId}/${timestamp}-${i}-${randomId}.${extension}`;
-        await supabase.storage
-          .from('book-images')
-          .remove([filename]);
+        if (filename) {
+          await supabase.storage
+            .from('book-images')
+            .remove([filename]);
+        }
       } catch (cleanupError) {
         console.error('Cleanup error:', cleanupError);
       }

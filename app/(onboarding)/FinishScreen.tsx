@@ -85,6 +85,17 @@ export default function FinishScreen() {
   try {
     setLoading(true);
 
+    console.log('📍 Saving profile with data:', {
+      name,
+      city,
+      latitude,
+      longitude,
+      phone,
+      instagram,
+      telegram,
+      primary_contact_type: primaryContactType,
+    });
+
     // Update profile in Supabase
     await updateProfile({
       name,
@@ -97,11 +108,14 @@ export default function FinishScreen() {
       primary_contact_type: primaryContactType,
     });
 
+    console.log('✅ Profile saved successfully!');
     reset(); // Clear Zustand store
     router.replace('/(tabs)/BrowseScreen');
-  } catch (error) {
-    console.error('Profile update error:', error);
-    Alert.alert('Error', 'Failed to save your profile. Please try again.');
+  } catch (error: any) {
+    console.error('❌ Profile update error:', error);
+    console.error('Error code:', error?.code);
+    console.error('Error message:', error?.message);
+    Alert.alert('Error', `Failed to save profile: ${error?.message || 'Unknown error'}`);
   } finally {
     setLoading(false);
   }
@@ -130,7 +144,7 @@ export default function FinishScreen() {
         {/* Title */}
         <View className="items-center mb-8">
           <Text className="text-[42px] font-bold text-[#FF9500] text-center leading-tight">
-            You're All Set!
+            You are All Set!
           </Text>
           <View className="w-16 h-1 bg-[#FFB84D] rounded-full mt-3" />
         </View>
@@ -156,7 +170,7 @@ export default function FinishScreen() {
         {/* Features */}
         <View className="w-full max-w-[280px] mb-12">
           <Text className="text-center text-[#777] text-base mb-6 font-medium">
-            Here's what you can do:
+            Heres what you can do:
           </Text>
 
           {[

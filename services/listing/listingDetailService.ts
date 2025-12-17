@@ -22,16 +22,15 @@ export interface ListingDetail {
   created_at: string;
   donation_preference?: string;
   user_id: string;
-  profiles: {
+  profiles?: {
     id: string;
-    full_name: string;
-    avatar_url: string | null;
+    name: string | null;
     city: string | null;
     phone: string | null;
     instagram: string | null;
     telegram: string | null;
     created_at: string;
-  };
+  } | null;
 }
 
 // Updated Seller interface to match your BookDetail types
@@ -116,8 +115,11 @@ export const formatListingForUI = (listing: ListingDetail): BookDetail => {
     console.warn('Failed to parse additional_info:', e);
   }
 
-  // Format member since date
-  const memberSince = new Date(listing.profiles.created_at).toLocaleDateString('en-US', {
+  // Format member since date with safe fallback
+  const memberSince = (listing.profiles?.created_at
+    ? new Date(listing.profiles.created_at)
+    : new Date(listing.created_at)
+  ).toLocaleDateString('en-US', {
     month: 'long',
     year: 'numeric'
   });
@@ -150,22 +152,22 @@ export const formatListingForUI = (listing: ListingDetail): BookDetail => {
     examType: listing.exam_type || listing.custom_exam_category || 'General',
     subject: listing.subject_category || listing.custom_subject_category || 'General',
     postedDate: postedAgo,
-    location: listing.profiles.city || 'Location not specified',
+    location: listing.profiles?.city || 'Location not specified',
     includeAnswerKey: (additionalInfo as any)?.include_answer_key || false,
     isNegotiable: listing.type === 'sell' ? (additionalInfo as any)?.negotiable_price || false : false,
     isFree: listing.price === 0,
     type: listing.type,
     donationPreference: listing.donation_preference,
     seller: {
-      name: listing.profiles.full_name || 'Anonymous User',
-      city: listing.profiles.city || 'City not specified',
-      phone: listing.profiles.phone || null,
-      instagram: listing.profiles.instagram || null,
-      telegram: listing.profiles.telegram || null,
+      name: listing.profiles?.name || 'Anonymous User',
+      city: listing.profiles?.city || 'City not specified',
+      phone: listing.profiles?.phone || null,
+      instagram: listing.profiles?.instagram || null,
+      telegram: listing.profiles?.telegram || null,
       memberSince: memberSince,
       rating: 0, // Remove seller rating system
       totalBooks: 0, // You might want to calculate this separately
-      avatar: listing.profiles.avatar_url || 'https://via.placeholder.com/150x150?text=User',
+      avatar: 'https://via.placeholder.com/150x150?text=User',
     },
   };
 };
