@@ -1,12 +1,7 @@
 {
   "expo": {
     "name": "PustakHub",
-    "slug": "PustakHub",
-    "extra": {
-      "eas": {
-        "projectId": "your-project-id"
-      }
-    },
+    "slug": "pustakHub",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/logo.png",
@@ -50,6 +45,13 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "fe6a0e18-b3f4-45b6-a3e4-ba3b0a5b0c3a"
+      }
+    },
+    "owner": "heisenberg300604"
   }
 }
